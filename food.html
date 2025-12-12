@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>悉尼内西区美食全景 | Inner West Dining Guide</title>
+    
+    <meta name="description" content="悉尼内西区 (Cabarita, Concord, Mortlake, North Strathfield) 50+ 餐厅深度美食指南与评测。">
+    <meta property="og:title" content="悉尼内西区美食全景指南">
+    <meta property="og:description" content="一份详尽的 Cabarita, Concord, Mortlake 及 North Strathfield 餐饮生态深度解析。">
+    <meta property="og:type" content="website">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        /* 隐藏滚动条但保留功能 */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased" x-data="diningApp()">
+
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼内西区美食全景</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">Gastronomic Topography of Sydney’s Inner West</p>
+                </div>
+                
+                <div class="w-full md:w-96 relative group">
+                    <input 
+                        x-model="search" 
+                        type="text" 
+                        placeholder="🔍 搜索餐厅、菜肴 (e.g., Wagyu, Pho)..." 
+                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 shadow-sm outline-none"
+                    >
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-100 overflow-x-auto hide-scroll">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 py-3 min-w-max">
+                <template x-for="suburb in suburbs" :key="suburb">
+                    <button 
+                        @click="activeSuburb = suburb; window.scrollTo({top: 0, behavior: 'smooth'})" 
+                        :class="activeSuburb === suburb ? 'bg-gray-900 text-white shadow-md transform scale-105' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
+                        class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap"
+                        x-text="suburb === 'All' ? '全部显示' : suburb">
+                    </button>
+                </template>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+        
+        <div class="flex justify-between items-center mb-6 px-1">
+            <span class="text-sm text-gray-500">
+                找到 <strong x-text="filteredRestaurants.length" class="text-gray-900"></strong> 家餐厅
+                <span x-show="activeSuburb !== 'All'" x-text="'在 ' + activeSuburb"></span>
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-cloak>
+            <template x-for="r in filteredRestaurants" :key="r.name">
+                <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative">
+                    
+                    <div class="absolute top-0 left-0 w-1.5 h-full transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
+                    
+                    <div class="p-6 flex-1 flex flex-col pl-7"> <div class="flex justify-between items-start mb-2">
+                            <span 
+                                class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-500" 
+                                x-text="r.suburb">
+                            </span>
+                        </div>
+                        
+                        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')" 
+                           target="_blank"
+                           class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2">
+                            <h3 class="text-xl font-bold text-gray-900 leading-tight" x-text="r.name"></h3>
+                            <svg class="w-4 h-4 text-gray-300 group-hover:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        
+                        <p class="text-gray-600 text-sm mb-5 leading-relaxed" x-text="r.desc"></p>
+                        
+                        <div class="mt-auto">
+                            <div class="w-full h-px bg-gray-50 mb-3"></div>
+                            <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center">
+                                <span class="mr-1">🔥</span> 招牌菜品
+                            </h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                <template x-for="dish in r.dishes" :key="dish">
+                                    <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition-colors cursor-default" x-text="dish"></span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div x-show="filteredRestaurants.length === 0" class="text-center py-20" x-cloak>
+            <div class="inline-block p-4 rounded-full bg-gray-100 mb-4">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <p class="text-gray-500 text-lg">未找到匹配的餐厅，换个关键词试试？</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-10">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-900 font-semibold mb-2">Inner West Gastronomic Guide</p>
+            <p class="text-gray-400 text-sm">Generated by Gemini • Based on Comprehensive Dining Report</p>
+        </div>
+    </footer>
+
+    <script>
+        function diningApp() {
+            return {
+                search: '',
+                activeSuburb: 'All',
+                suburbs: ['All', 'Cabarita', 'Concord', 'Concord West', 'Mortlake', 'North Strathfield'],
+                
+                // 完整数据录入
+                restaurants: [
+                    // --- Cabarita ---
+                    { name: "Angelo’s Cabarita", suburb: "Cabarita", desc: "该区的皇冠明珠，拥有永恒的优雅与绝佳海湾景观。平衡传统意大利工艺与现代澳洲农产品。", dishes: ["和牛土豆面疙瘩", "海鲜拼盘", "桌边提拉米苏"] },
+                    { name: "Vela Dining & Bar", suburb: "Cabarita", desc: "坐落于游艇码头，提供精致地中海餐饮和休闲日落酒吧双重体验，拥有270度港口景观。", dishes: ["双人海鲜拼盘", "慢炖羊肩肉", "焗扇贝"] },
+                    { name: "Sanders Kiosk", suburb: "Cabarita", desc: "亲民的社区补给站，位于遗产建筑中。提供超越标准的咖啡馆餐饮，宠物友好。", dishes: ["炸鸡排汉堡", "烤柠檬鳎鱼", "热带冰沙"] },
+                    
+                    // --- Concord ---
+                    { name: "Fratelli & Co.", suburb: "Concord", desc: "繁忙的现代意大利家庭餐馆，设有索菲亚·罗兰厅。专注于木火烹饪和慷慨的分享份量。", dishes: ["博斯卡伊奥拉鸡宽面", "木火比萨", "炸西葫芦花"] },
+                    { name: "Sud - Southern Italian", suburb: "Concord", desc: "专注意大利南部街头美食，氛围热闹。强调“从头吃到尾”和正宗区域食谱。", dishes: ["海鲜炖饭", "诺玛意面", "炭烤羊排"] },
+                    { name: "Spuntini", suburb: "Concord", desc: "现代意大利小酒馆，专注小吃(Spuntini)和分享盘。自制意面和优质本地食材是亮点。", dishes: ["Yamba大虾螺旋面", "和牛后腿肉", "豌豆挞"] },
+                    { name: "Cucina Espresso", suburb: "Concord", desc: "模糊了高端咖啡馆与餐厅的界限。以创新早午餐和意大利风味早餐闻名的家族店。", dishes: ["早餐炸饭团", "意式烘蛋", "西葫芦花"] },
+                    { name: "Paperboy", suburb: "Concord", desc: "潮流引领者，极简时尚风。将亚洲融合元素融入澳洲早午餐，拥有严肃的咖啡项目。", dishes: ["富士山(抹茶)", "日出卷", "印尼炒面 3.0"] },
+                    { name: "The Rusty Rabbit", suburb: "Concord", desc: "充满活力的早午餐点，份量慷慨。以颓废的甜点早餐和宠物友好著称。", dishes: ["瑞可塔芝士松饼", "红薯玉米饼", "早餐卷"] },
+                    { name: "Majors Bay Sushi", suburb: "Concord", desc: "可靠且新鲜的寿司体验，区别于回转寿司，提供慷慨的刺身切片和创意卷。", dishes: ["炙烤三文鱼握寿司", "炸鸡排牛油果卷", "刺身拼盘"] },
+                    { name: "Kokoro Japanese", suburb: "Concord", desc: "寿司吧与铁板烧双重概念，氛围热闹。提供盖饭、乌冬面等广泛菜单。", dishes: ["咖喱炸鸡排饭", "照烧三文鱼", "特制加州卷"] },
+                    { name: "Daikoku Teppanyaki", suburb: "Concord", desc: "以铁板烧表演为中心的戏剧性用餐体验。适合庆祝活动，提供“晚餐加表演”。", dishes: ["辣猪肉包", "羊排与大虾", "牛排与带子"] },
+                    { name: "Yum Yum Bakery", suburb: "Concord", desc: "屡获殊荣的黎巴嫩烘焙坊，社区基石。以周末排队的黎巴嫩比萨(Manoush)闻名。", dishes: ["肉与芝士Manoush", "扎塔Manoush", "沙瓦玛拼盘"] },
+                    { name: "Munoushee", suburb: "Concord", desc: "专注面团质量的黎巴嫩比萨吧。当地人早餐首选，氛围朴实无华。", dishes: ["豪华Munoushee", "肉比萨(Lahembajin)", "黎巴嫩大早餐"] },
+                    { name: "Baywok", suburb: "Concord", desc: "历史悠久的泰国机构，平衡传统食谱与澳式口味。适合家庭聚餐。", dishes: ["玛莎曼牛肉咖喱", "泰式炒粉", "椒盐鱿鱼"] },
+                    { name: "The Backyard", suburb: "Concord", desc: "位于Briars俱乐部内的美食概念，拥有大型户外绿地。主打自制烟熏肉类。", dishes: ["烟熏肉拼盘", "现代海鲜拼盘", "炸花菜"] },
+                    { name: "The Concord Club", suburb: "Concord", desc: "传统的欧式小酒馆体验(RSL)，社区聚会点。强调丰盛的烤肉和炸肉排。", dishes: ["每日烤肉", "炸鸡排", "烤鱼"] },
+                    { name: "Crust Pizza", suburb: "Concord", desc: "高端美食比萨连锁，专注于新鲜食材和创意配料，适合寻求精致口味的人群。", dishes: ["Peri-Peri鸡肉比萨", "四川辣鸡比萨", "素食至尊"] },
+                    { name: "Shareef’s", suburb: "Concord", desc: "怀旧复古的贝鲁特风格“社交俱乐部”。专注于传统垂直烤肉技术的正宗沙瓦玛。", dishes: ["经典鸡肉沙瓦玛", "解构羊肉沙瓦玛", "经典法拉费"] },
+                    { name: "Frango", suburb: "Concord", desc: "传奇的葡萄牙炭烤鸡店。快节奏，独特的炭火烟味和神级辣椒酱是核心。", dishes: ["炭烤鸡", "葡萄牙鸡肉汉堡", "Frango辣椒酱"] },
+                    { name: "Sugar Muma’s", suburb: "Concord", desc: "专攻甜食的甜点吧。提供视觉奢华的满载奶昔和冷冻甜点，适合社交媒体。", dishes: ["巴西莓杯", "Biscoff奶昔", "奥利奥奶昔"] },
+                    { name: "M.J & Co.", suburb: "Concord", desc: "休闲希腊食肆，专注Souvlaki和Gyros。大型连锁店的个性化替代品。", dishes: ["Gyros拼盘", "希腊沙拉", "Souvlaki卷"] },
+                    { name: "Zeus Street Greek", suburb: "Concord", desc: "现代快速休闲希腊菜。工业时尚风，强调“诚信食物”和道德采购肉类。", dishes: ["Uncle Tzimmy皮塔卷", "哈罗米薯条", "斯巴达盒"] },
+                    { name: "Donerci Kazims", suburb: "Concord", desc: "专攻土耳其美食，以旋转烤肉和Pide为中心。自家烘焙面包和正宗香料。", dishes: ["混合烤肉拼盘", "菠菜芝士Pide", "牛肉零食盒(HSP)"] },
+                    { name: "Espresso 96", suburb: "Concord", desc: "紧凑活力的咖啡馆，平衡放纵与健康。提供生食/无麸质点心和丰盛汉堡。", dishes: ["早餐汉堡", "生食点心", "精品咖啡"] },
+                    { name: "The Family Brasserie", suburb: "Concord", desc: "Concord RSL内的典型俱乐部餐饮。从亚洲炒菜到经典烤肉，性价比高。", dishes: ["帕尔马干酪鸡排", "烤猪肉", "渔夫篮"] },
+
+                    // --- Concord West ---
+                    { name: "Mattina", suburb: "Concord West", desc: "遗产风格建筑内的迷人咖啡馆，舒适乡村气息。偏向受意大利影响的早午餐。", dishes: ["烘蛋", "帕尔马火腿开放三明治", "蘑菇吐司"] },
+                    { name: "Cafe Seed", suburb: "Concord West", desc: "现代通透的咖啡馆，宠物友好。提供健康碗和放纵汉堡的多功能全天候场所。", dishes: ["辣椒炒蛋", "BBB健康碗", "日式炸鸡汉堡"] },
+                    { name: "Three Spoons", suburb: "Concord West", desc: "三姐妹建立的古雅社区咖啡馆，像家一样的客厅感。可靠的传统咖啡馆美食。", dishes: ["大早餐", "法式吐司", "澳白咖啡"] },
+                    { name: "ThreeOneNine", suburb: "Concord West", desc: "现代澳式餐饮，带有微妙亚洲影响。环境时尚，强调新鲜海鲜。", dishes: ["斯坎皮虾杂烩浓汤", "虾多士", "越南鸡肉沙拉"] },
+                    { name: "Pajuok", suburb: "Concord West", desc: "正宗韩国餐厅，专攻传统汤类(特别是猪肉汤)和米饭。真正的韩国“灵魂食物”。", dishes: ["猪肉汤饭", "雪浓汤", "白切肉"] },
+                    { name: "Flamin Grillz", suburb: "Concord West", desc: "迎合肉食者的美式餐馆风格。专注于排骨、汉堡和牛排，份量慷慨。", dishes: ["BBQ猪肋排", "美食汉堡", "牛排薯条"] },
+                    { name: "Victoria Village", suburb: "Concord West", desc: "传统郊区中餐馆，提供怀旧的粤菜和澳式中餐最爱。外卖热门。", dishes: ["蜜糖鸡", "蒙古羊肉", "特色炒饭"] },
+                    { name: "Hotel Concord Bistro", suburb: "Concord West", desc: "现代化酒吧餐饮空间，社交中心。提供炸肉排等广泛菜单。", dishes: ["炸鸡排", "后腿牛排", "汉堡"] },
+                    { name: "Casa Bella Pizza", suburb: "Concord West", desc: "经典邻里意大利餐厅，温暖的“红酱”氛围。份量慷慨，适合家庭。", dishes: ["至尊比萨", "水牛城比萨", "阿尔弗雷多鸡肉意面"] },
+                    
+                    // --- Mortlake ---
+                    { name: "The Issen Fresh Sushi", suburb: "Mortlake", desc: "隐秘宝石，日韩融合菜。菜单创新，包含海胆意面和刺身塔可。", dishes: ["海胆奶油意面", "刺身塔可", "章鱼华夫饼"] },
+                    { name: "Miz Tutti Pizzeria", suburb: "Mortlake", desc: "充满活力的当地意大利中心，以木火比萨闻名。家庭导向，服务友好。", dishes: ["食肉者比萨", "牛肉肉酱意面", "炸鱿鱼"] },
+                    { name: "Son of Dennis", suburb: "Mortlake", desc: "现代时尚咖啡馆，社区聚会点。专注高质量烤三明治、健康碗和精品咖啡。", dishes: ["烟熏哈罗米烤三明治", "巴西莓碗", "辣鸡佛卡夏"] },
+                    { name: "Maison Mornings", suburb: "Mortlake", desc: "提供精致体验的优雅咖啡馆。适合悠闲早餐或咖啡叙旧。", dishes: ["高级牛油果吐司", "精品咖啡", "早午餐盘"] },
+                    { name: "Mortlake Ocean Food", suburb: "Mortlake", desc: "经典澳式炸鱼薯条店。老派实用，专注面糊质量和海鲜新鲜度。", dishes: ["炸鱼薯条", "土豆饼", "炸鱿鱼圈"] },
+                    { name: "Wolfpack Coffee", suburb: "Mortlake", desc: "精品咖啡烘焙商和咖啡馆。工业风，专注咖啡制作工艺。", dishes: ["拼配咖啡", "单品手冲", "新鲜糕点"] },
+                    { name: "Dazed Cafe", suburb: "Mortlake", desc: "当地早起咖啡点，提供轻松环境和快速补给。", dishes: ["晨间咖啡", "培根蛋卷", "轻食"] },
+
+                    // --- North Strathfield ---
+                    { name: "The Brew Spot", suburb: "North Strathfield", desc: "位于音乐学院，连接教育与社区。提供精品咖啡和酸种三明治。", dishes: ["精品咖啡", "酸种三明治", "早午餐"] },
+                    { name: "La Lune Market", suburb: "North Strathfield", desc: "韩国人经营的审美系咖啡馆与集市。以满载三明治和精致糕点闻名。", dishes: ["招牌鸡肉三明治", "草莓抹茶", "巴斯克芝士蛋糕"] },
+                    { name: "August Coffee", suburb: "North Strathfield", desc: "网红咖啡馆，以小熊冰块和视觉惊艳饮品著称。菜单融合亚洲食材。", dishes: ["冰樱桃抹茶拿铁", "烤蔬菜和帕尔马火腿", "秋季谷物丰收"] },
+                    { name: "Bar Biscotti", suburb: "North Strathfield", desc: "Bakehouse Quarter内的繁忙咖啡馆。混合烘焙与丰盛餐点，效率高。", dishes: ["地中海土豆与鸡蛋", "鸡肉卷", "曲奇可颂"] },
+                    { name: "I Gladiatori", suburb: "North Strathfield", desc: "罗马风情餐厅，专攻轻盈气孔多的Pinsa Romana。氛围亲密。", dishes: ["Pinsa比萨", "电话线炸饭团", "肉酱面疙瘩"] },
+                    { name: "SAN SAN", suburb: "North Strathfield", desc: "创意三明治吧，现代熟食店风格。专注优质馅料和手工面包。", dishes: ["美食三明治", "精品咖啡", "熟食"] },
+                    { name: "Late Night Table", suburb: "North Strathfield", desc: "时尚韩式融合餐吧(Pocha)，夜生活热点。专注内脏料理和创意意面。", dishes: ["烤牛大肠", "蜂巢米酒", "海胆油意面"] },
+                    { name: "Noodlee", suburb: "North Strathfield", desc: "中式面条和快餐，适合学生和寻求实惠餐点的人群。", dishes: ["牛肉面", "炒面", "快餐便当"] },
+                    { name: "Myeongdong", suburb: "North Strathfield", desc: "以慷慨小菜(Banchan)和家庭共享火锅闻名的传统韩国餐厅。像悉尼的一片首尔。", dishes: ["土豆排骨汤", "大虾土豆可乐饼", "海鲜葱饼"] },
+                    { name: "Mister Gee", suburb: "North Strathfield", desc: "从餐车起家，“爆汁汉堡”的代名词。休闲酷炫，专注汉堡艺术。", dishes: ["松露汉堡", "Cheese Boogie", "松露薯条"] },
+                    { name: "Outback Steakhouse", suburb: "North Strathfield", desc: "著名国际连锁，提供一致的美式牛排馆体验。份量大，适合家庭。", dishes: ["炸洋葱花", "肉眼牛排", "美式肋排"] },
+                    { name: "Kosuke Ramen", suburb: "North Strathfield", desc: "正宗日式拉面，以自制面条和熬制20小时以上的无味精肉汤为荣。", dishes: ["豚骨拉面", "沾面", "日式炸鸡"] },
+                    { name: "Yuzu Dining", suburb: "North Strathfield", desc: "精致日式用餐体验，结合传统与现代。提供寿司、刺身和和牛。", dishes: ["豪华寿司刺身", "爆米花虾", "和牛料理"] },
+                    { name: "Yume Sushi", suburb: "North Strathfield", desc: "当地受欢迎的日料，以糙米寿司和慷慨份量平衡健康与美味。", dishes: ["照烧鸡肉糙米卷", "炸鸡乌冬面", "和牛饭"] },
+                    { name: "Thai Paragon", suburb: "North Strathfield", desc: "稍微高档的泰式体验，注重呈现(如菠萝容器)。食材新鲜。", dishes: ["菠萝炒饭", "热带鸭肉咖喱", "冬阴功汤"] },
+                    { name: "Pron Prohm Thai", suburb: "North Strathfield", desc: "悉尼经营时间最长的泰国餐厅之一(1985年)。温暖传统，口味正宗。", dishes: ["玛莎曼咖喱", "椒盐鱿鱼", "泰式炒河粉"] },
+                    { name: "Abhi's Indian", suburb: "North Strathfield", desc: "悉尼印度餐饮界地标，提供超越标准的区域特色菜(果阿和钦奈)。", dishes: ["炸菠菜脆片", "果阿鱼咖喱", "马萨拉薄饼"] },
+                    { name: "Delhi Palace", suburb: "North Strathfield", desc: "经典印度用餐体验，提供广泛的咖喱和坦都里项目。家庭导向。", dishes: ["黄油鸡", "罗赫恩羊肉", "坦都里烤鸡"] },
+                    { name: "The Taste of Village", suburb: "North Strathfield", desc: "专注北印度和印支美食。宴会式用餐，香料正宗大胆。", dishes: ["山羊咖喱", "黄油鸡", "Malai Kofta"] },
+                    { name: "Jongro Hwaro BBQ", suburb: "North Strathfield", desc: "正宗韩国炭火BBQ，复制首尔钟路区氛围。真正木炭赋予卓越风味。", dishes: ["和牛套餐", "厚切猪五花", "铁板玉米芝士"] },
+                    { name: "Liu Rose", suburb: "North Strathfield", desc: "始于1971年的老牌粤菜馆。怀旧体验，服务个性化。", dishes: ["梅子酱烧鸭", "辣子鸡", "干煸四季豆"] },
+                    { name: "Shone Chi Kitchen", suburb: "North Strathfield", desc: "川菜火辣风味。注重辣椒和花椒的大胆使用，适合嗜辣者。", dishes: ["红烧肉", "蹄花汤", "红油抄手"] },
+                    { name: "North Strathfield Hotel", suburb: "North Strathfield", desc: "当地酒吧(The Bakehouse)，提供活力氛围和现场娱乐。经典澳洲酒吧菜。", dishes: ["汉堡", "炸肉排", "牛排"] },
+                    { name: "Baan Raun Thai", suburb: "North Strathfield", desc: "谦虚的家庭经营泰式厨房。专注传统食谱，安静尊重。", dishes: ["泰式炒河粉", "玛莎曼咖喱", "菠萝炒饭"] },
+                    { name: "The Savoury", suburb: "North Strathfield", desc: "现代越南美食，空间大。用优质食材(如和牛)提升街头美食。", dishes: ["特级和牛Pho", "烤猪肉檬粉", "摇摇牛肉"] },
+                    { name: "Thuan Thien Bakery", suburb: "North Strathfield", desc: "经典越南面包店，以新鲜面包和越南包(Banh Mi)服务社区。", dishes: ["越南包(Banh Mi)", "肉派", "面包"] },
+                    { name: "Queen St Cafe", suburb: "North Strathfield", desc: "邻里咖啡点，提供咖啡和简餐。适合日常交谈。", dishes: ["咖啡", "三明治", "早餐盘"] },
+                    { name: "Cafe 93", suburb: "North Strathfield", desc: "车站附近的咖啡点，为通勤者提供快速补给。", dishes: ["早餐盘", "咖啡", "外带简餐"] }
+                ],
+                
+                get filteredRestaurants() {
+                    return this.restaurants.filter(r => {
+                        const matchesSuburb = this.activeSuburb === 'All' || r.suburb === this.activeSuburb;
+                        const query = this.search.toLowerCase();
+                        const matchesSearch = r.name.toLowerCase().includes(query) || 
+                                            r.desc.toLowerCase().includes(query) ||
+                                            r.dishes.some(d => d.toLowerCase().includes(query));
+                        return matchesSuburb && matchesSearch;
+                    });
+                },
+                
+                getSuburbColor(suburb) {
+                    const colors = {
+                        'Cabarita': 'bg-blue-400',
+                        'Concord': 'bg-green-500',
+                        'Concord West': 'bg-amber-400',
+                        'Mortlake': 'bg-indigo-400',
+                        'North Strathfield': 'bg-rose-500'
+                    };
+                    return colors[suburb] || 'bg-gray-400';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
