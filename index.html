@@ -33,7 +33,7 @@
                             class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all">
                     </div>
                     
-                    <button @click="showRandomizer = true" 
+                    <button @click="pickRandom()" 
                         class="bg-gray-900 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center gap-2 whitespace-nowrap transform hover:-translate-y-0.5">
                         <span>🎲</span> <span class="hidden sm:inline">帮我选</span><span class="sm:hidden">随机</span>
                     </button>
@@ -41,19 +41,12 @@
             </div>
 
             <div class="space-y-3 pb-1">
-                
                 <div class="overflow-x-auto hide-scroll">
                     <div class="flex space-x-2 min-w-max items-center">
                         <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">📍 区域</span>
-                        
-                        <button @click="resetFilter('suburbs')" 
-                            :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'"
-                            class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
-                        
+                        <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                         <template x-for="suburb in suburbs" :key="suburb">
-                            <button @click="toggleFilter('activeSuburbs', suburb)" 
-                                :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'"
-                                class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
+                            <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
                         </template>
                     </div>
                 </div>
@@ -61,15 +54,9 @@
                 <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
                     <div class="flex space-x-2 min-w-max items-center">
                         <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">🍴 类别</span>
-                        
-                        <button @click="resetFilter('categories')" 
-                            :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'"
-                            class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
-
+                        <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                         <template x-for="cat in categories" :key="cat">
-                            <button @click="toggleFilter('activeCategories', cat)" 
-                                :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'"
-                                class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
+                            <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
                         </template>
                     </div>
                 </div>
@@ -77,62 +64,67 @@
                 <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
                     <div class="flex space-x-2 min-w-max items-center">
                         <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">💰 价位</span>
-                        
-                        <button @click="resetFilter('prices')" 
-                            :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'"
-                            class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
-                        
-                        <button @click="toggleFilter('activePrices', 1)" 
-                            :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'"
-                            class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
-                        
-                        <button @click="toggleFilter('activePrices', 2)" 
-                            :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'"
-                            class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
-                        
-                        <button @click="toggleFilter('activePrices', 3)" 
-                            :class="activePrices.includes(3) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'"
-                            class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$$ (40+)</button>
+                        <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                        <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
+                        <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
+                        <button @click="toggleFilter('activePrices', 3)" :class="activePrices.includes(3) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$$ (40+)</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </header>
 
     <div x-show="showRandomizer" class="fixed inset-0 z-50 flex items-center justify-center px-4" x-cloak>
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="showRandomizer = false" x-transition.opacity></div>
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden" 
-             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0">
-            <div class="p-6 text-center">
-                <button @click="showRandomizer = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
-                <h3 class="text-2xl font-bold text-gray-800 mb-1">今天吃什么？</h3>
-                <p class="text-sm text-gray-500 mb-6">在所有餐厅中随机选择</p>
-                
-                <div x-show="!randomResult" class="space-y-3">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">选择预算范围</p>
-                    <div class="grid grid-cols-1 gap-3">
-                        <button @click="pickRandom(1)" class="p-3 rounded-xl border border-gray-200 hover:border-green-500 hover:bg-green-50 flex justify-between items-center"><span>💸 实惠简餐</span> <span class="text-green-600 font-bold">$</span></button>
-                        <button @click="pickRandom(2)" class="p-3 rounded-xl border border-gray-200 hover:border-orange-500 hover:bg-orange-50 flex justify-between items-center"><span>🍝 休闲聚餐</span> <span class="text-orange-600 font-bold">$$</span></button>
-                        <button @click="pickRandom(3)" class="p-3 rounded-xl border border-gray-200 hover:border-purple-500 hover:bg-purple-50 flex justify-between items-center"><span>🍷 精致享受</span> <span class="text-purple-600 font-bold">$$$</span></button>
-                        <button @click="pickRandom('All')" class="p-3 rounded-xl border border-gray-200 hover:border-gray-800 hover:bg-gray-50">🤷‍♂️ 随便 / 都可以</button>
+        
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden flex flex-col" 
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+            
+            <div class="p-6 h-[320px] flex flex-col items-center justify-center text-center relative">
+                <div class="absolute top-4 text-xs text-gray-300 font-bold tracking-widest uppercase">IT'S FATE!</div>
+
+                <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                    
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
+                        <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
+                        <span class="text-xs font-bold text-orange-500" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+                    </div>
+
+                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-3 leading-tight line-clamp-2 h-16 flex items-center justify-center" x-text="randomResult?.name"></h2>
+                    
+                    <p class="text-sm text-gray-500 mb-6 leading-relaxed line-clamp-3 px-4 h-[4.5em]" x-text="randomResult?.desc"></p>
+
+                    <div class="flex flex-wrap justify-center gap-1.5">
+                        <template x-for="dish in randomResult?.dishes.slice(0, 3)">
+                            <span class="text-[10px] px-2 py-1 bg-orange-50 text-orange-700 rounded-lg border border-orange-100" x-text="dish"></span>
+                        </template>
                     </div>
                 </div>
 
-                <div x-show="randomResult" class="text-left" x-transition:enter="transition ease-out duration-500 delay-100">
-                    <div class="relative bg-white border-2 border-orange-100 rounded-xl p-5 shadow-sm mt-2">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-500" x-text="randomResult?.suburb"></span>
-                            <span class="text-lg text-orange-500 font-bold" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-900 mb-1" x-text="randomResult?.name"></h4>
-                        <p class="text-xs text-teal-600 font-bold uppercase mb-3" x-text="randomResult?.displayCategory"></p>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed" x-text="randomResult?.desc"></p>
-                        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult?.name + ' ' + randomResult?.suburb + ' Sydney')" target="_blank"
-                           class="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-lg transition-colors">📍 去这里吃 (Google Maps)</a>
-                    </div>
-                    <button @click="randomResult = null" class="mt-4 text-sm text-gray-400 hover:text-gray-600 underline w-full text-center">不喜欢？重选一个</button>
+                <div x-show="!randomResult" class="absolute inset-0 flex items-center justify-center bg-white z-20">
+                    <p class="text-gray-400 animate-pulse">正在命运的轮盘中抽取...</p>
                 </div>
+            </div>
+
+            <div class="grid grid-cols-3 border-t border-gray-100 bg-gray-50 divide-x divide-gray-100">
+                
+                <button @click="pickRandom()" class="flex flex-col items-center justify-center py-4 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
+                    <span class="text-xl mb-1 group-hover:rotate-180 transition-transform duration-500">🔄</span>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选一次</span>
+                </button>
+
+                <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
+                   target="_blank"
+                   class="flex flex-col items-center justify-center py-4 hover:bg-green-50 hover:text-green-600 transition-colors group">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📍</span>
+                    <span class="text-xs font-bold text-gray-900 group-hover:text-green-600">带我去</span>
+                </a>
+
+                <button @click="showRandomizer = false" class="flex flex-col items-center justify-center py-4 hover:bg-gray-200 hover:text-gray-900 transition-colors group">
+                    <span class="text-xl mb-1">✕</span>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-gray-900">返回</span>
+                </button>
             </div>
         </div>
     </div>
@@ -201,8 +193,7 @@
                 activePrices: [],
 
                 // 选项源
-                suburbs: [], // 动态生成
-                // ⚠️ 更新后的类别列表：用5个中餐细分替代了单一的 "Chinese"
+                suburbs: [],
                 categories: [
                     'Cantonese', 'Sichuan', 'Northern', 'Shanghainese', 'Hotpot', 
                     'Japanese', 'Korean', 'Thai', 'Vietnamese', 
@@ -226,11 +217,8 @@
                                 id: row.id || ('temp_' + index),
                                 name: row.name || '未知餐厅',
                                 suburb: row.suburb ? row.suburb.trim() : 'Other',
-                                
-                                // 核心：使用新的细分归类逻辑
-                                category: this.normalizeCategory(rawCat), 
+                                category: this.normalizeCategory(rawCat),
                                 displayCategory: rawCat, 
-
                                 priceLevel: parseInt(row.priceLevel) || 1, 
                                 desc: row.desc || '暂无描述',
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : []
@@ -247,27 +235,14 @@
                     }
                 },
 
-                // --- 核心：中餐细分归类算法 ---
+                // 类别归纳
                 normalizeCategory(raw) {
                     const lower = raw.toLowerCase();
-
-                    // 1. Hotpot (火锅/麻辣烫) - 优先级高
                     if (lower.includes('hotpot') || lower.includes('malatang') || lower.includes('buffet')) return 'Hotpot';
-
-                    // 2. Sichuan (川湘菜)
                     if (lower.includes('sichuan') || lower.includes('hunan') || lower.includes('spicy') || lower.includes('chili')) return 'Sichuan';
-
-                    // 3. Cantonese (粤菜/港式)
-                    // 注意：BBQ 通常指广式烧腊，除非特指韩式
                     if (lower.includes('cantonese') || lower.includes('yum cha') || lower.includes('hong kong') || lower.includes('shunde') || lower.includes('roast') || (lower.includes('bbq') && !lower.includes('korean'))) return 'Cantonese';
-
-                    // 4. Shanghainese (江浙沪)
                     if (lower.includes('shanghainese') || lower.includes('huaiyang') || lower.includes('wonton')) return 'Shanghainese';
-
-                    // 5. Northern (北方/面食) - 包含西安、北京、东北、山东、面条、饺子
                     if (lower.includes('northern') || lower.includes('northeast') || lower.includes('beijing') || lower.includes('xi\'an') || lower.includes('shandong') || lower.includes('noodle') || lower.includes('dumpling') || lower.includes('skewer')) return 'Northern';
-
-                    // --- 其他国际菜系 ---
                     if (lower.includes('japanese') || lower.includes('sushi') || lower.includes('izakaya') || lower.includes('ramen')) return 'Japanese';
                     if (lower.includes('korean')) return 'Korean';
                     if (lower.includes('thai')) return 'Thai';
@@ -276,12 +251,10 @@
                     if (lower.includes('middle eastern') || lower.includes('lebanese') || lower.includes('turkish')) return 'Middle Eastern';
                     if (lower.includes('italian') || lower.includes('pizza')) return 'Italian';
                     if (lower.includes('cafe') || lower.includes('bakery') || lower.includes('dessert') || lower.includes('brunch')) return 'Cafe';
-                    
-                    // 默认归类
                     return 'Western'; 
                 },
 
-                // --- 交互逻辑 ---
+                // 交互逻辑
                 toggleFilter(targetArray, value) {
                     if (this[targetArray].includes(value)) {
                         this[targetArray] = this[targetArray].filter(item => item !== value);
@@ -301,29 +274,33 @@
                         const matchesSuburb = this.activeSuburbs.length === 0 || this.activeSuburbs.includes(r.suburb);
                         const matchesCategory = this.activeCategories.length === 0 || this.activeCategories.includes(r.category);
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
-                        
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
                                             r.displayCategory.toLowerCase().includes(query) || 
                                             r.desc.toLowerCase().includes(query) ||
                                             r.dishes.some(d => d.toLowerCase().includes(query));
-                                            
                         return matchesSuburb && matchesCategory && matchesPrice && matchesSearch;
                     });
                 },
-                pickRandom(targetPrice) {
-                    if (this.restaurants.length === 0) return;
-                    let pool = this.restaurants;
-                    if (targetPrice !== 'All') {
-                        pool = pool.filter(r => r.priceLevel == targetPrice);
+
+                // 随机选择逻辑 (更新)
+                pickRandom() {
+                    // 1. 使用 filteredRestaurants (当前已筛选的列表) 作为池子
+                    let pool = this.filteredRestaurants;
+                    
+                    if (pool.length === 0) {
+                        alert("当前筛选条件下没有餐厅，请先调整筛选！");
+                        return;
                     }
-                    if (pool.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * pool.length);
-                        this.randomResult = pool[randomIndex];
-                    } else {
-                        alert("该价位没有找到餐厅！");
-                    }
+                    
+                    // 2. 随机抽取
+                    const randomIndex = Math.floor(Math.random() * pool.length);
+                    this.randomResult = pool[randomIndex];
+                    
+                    // 3. 显示弹窗
+                    this.showRandomizer = true;
                 },
+
                 getSuburbColor(suburb) {
                     const colors = { 'Burwood': 'bg-purple-500', 'Cabarita': 'bg-blue-400', 'Concord': 'bg-green-500', 'Concord West': 'bg-amber-400', 'Mortlake': 'bg-indigo-400', 'North Strathfield': 'bg-rose-500', 'Rhodes': 'bg-sky-500', 'Strathfield': 'bg-yellow-500' };
                     return colors[suburb] || 'bg-gray-400';
