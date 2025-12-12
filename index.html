@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>悉尼内西美食指南 | Inner West Dining Guide</title>
+    <title>悉尼内西区美食全景 | Inner West Dining Guide</title>
+    <meta name="description" content="悉尼内西区美食指南：含价位筛选与随机推荐功能。">
     
-    <meta name="description" content="悉尼内西区 (Cabarita, Concord, Mortlake, North Strathfield) 50+ 餐厅深度美食指南与评测。">
-    <meta property="og:title" content="悉尼Concord周边美食指南">
-    <meta property="og:type" content="website">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
@@ -17,90 +14,162 @@
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased" x-data="diningApp()">
 
-    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <header class="glass-effect shadow-sm sticky top-0 z-40 border-b border-gray-100 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                 <div class="text-center md:text-left">
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼内西吃什么 </h1>
-                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">更多区域拓展中。关注小红书 @ian233 了解最新进展</p>
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼内西吃什么</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">更多区域拓展中。关注小红书 @ian233 了解最新进展。</p>
                 </div>
                 
-                <div class="w-full md:w-80 relative group">
-                    <input 
-                        x-model="search" 
-                        type="text" 
-                        placeholder="🔍 搜店名、菜名..." 
-                        class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none"
-                    >
+                <div class="flex gap-3 w-full md:w-auto">
+                    <div class="relative flex-grow md:flex-grow-0 md:w-64 group">
+                        <input x-model="search" type="text" placeholder="🔍 搜店名、菜系..." 
+                            class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all">
+                    </div>
+                    
+                    <button @click="showRandomizer = true" 
+                        class="bg-gray-900 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center gap-2 whitespace-nowrap transform hover:-translate-y-0.5">
+                        <span>🎲</span> <span class="hidden sm:inline">帮我选</span><span class="sm:hidden">随机</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="space-y-3 pb-2">
-                <div class="overflow-x-auto hide-scroll pb-1">
+            <div class="space-y-3 pb-1">
+                <div class="overflow-x-auto hide-scroll">
                     <div class="flex space-x-2 min-w-max">
                         <span class="text-xs font-bold text-gray-400 uppercase self-center mr-2">📍 区域:</span>
                         <template x-for="suburb in suburbs" :key="suburb">
-                            <button 
-                                @click="activeSuburb = suburb; window.scrollTo({top: 0, behavior: 'smooth'})" 
-                                :class="activeSuburb === suburb ? 'bg-gray-800 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'"
-                                class="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap"
-                                x-text="suburb === 'All' ? '全部' : suburb">
-                            </button>
+                            <button @click="activeSuburb = suburb; window.scrollTo({top: 0, behavior: 'smooth'})" 
+                                :class="activeSuburb === suburb ? 'bg-gray-800 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'"
+                                class="px-3 py-1 rounded-full text-xs font-medium transition-colors" x-text="suburb === 'All' ? '全部' : suburb"></button>
                         </template>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
-                    <div class="flex space-x-2 min-w-max">
-                        <span class="text-xs font-bold text-gray-400 uppercase self-center mr-2">🍴 类别:</span>
-                        <template x-for="cat in categories" :key="cat">
-                            <button 
-                                @click="activeCategory = cat; window.scrollTo({top: 0, behavior: 'smooth'})" 
-                                :class="activeCategory === cat ? 'bg-teal-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-teal-50'"
-                                class="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap"
-                                x-text="cat === 'All' ? '全部' : cat">
-                            </button>
-                        </template>
+                <div class="flex flex-col md:flex-row gap-3 md:items-center border-t border-dashed border-gray-200 pt-2">
+                    <div class="overflow-x-auto hide-scroll flex-1">
+                        <div class="flex space-x-2 min-w-max">
+                            <span class="text-xs font-bold text-gray-400 uppercase self-center mr-2">🍴 类别:</span>
+                            <template x-for="cat in categories" :key="cat">
+                                <button @click="activeCategory = cat; window.scrollTo({top: 0, behavior: 'smooth'})" 
+                                    :class="activeCategory === cat ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-teal-50'"
+                                    class="px-3 py-1 rounded-full text-xs font-medium transition-colors" x-text="cat === 'All' ? '全部' : cat"></button>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 min-w-max">
+                         <span class="text-xs font-bold text-gray-400 uppercase mr-1">💰 价位:</span>
+                         <select x-model="activePrice" class="text-xs border-gray-200 rounded-lg py-1 pl-2 pr-6 bg-white border focus:ring-orange-500 focus:outline-none">
+                             <option value="All">全部价位</option>
+                             <option value="1">$20以内 ($)</option>
+                             <option value="2">$20 - $40 ($$)</option>
+                             <option value="3">$40以上 ($$$)</option>
+                         </select>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
+    <div x-show="showRandomizer" class="fixed inset-0 z-50 flex items-center justify-center px-4" x-cloak>
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="showRandomizer = false" 
+             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
         
-        <div class="flex justify-between items-center mb-6 px-1 text-xs text-gray-500">
-            <span>
-                找到 <strong x-text="filteredRestaurants.length" class="text-gray-900 text-sm"></strong> 家餐厅
-            </span>
-            <div class="flex gap-2">
-                <span x-show="activeSuburb !== 'All'" class="bg-gray-100 px-2 py-0.5 rounded text-gray-600">📍 <span x-text="activeSuburb"></span></span>
-                <span x-show="activeCategory !== 'All'" class="bg-teal-50 px-2 py-0.5 rounded text-teal-700">🍴 <span x-text="activeCategory"></span></span>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden" 
+             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100 translate-y-0" x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+            
+            <div class="p-6 text-center">
+                <h3 class="text-2xl font-bold text-gray-800 mb-1">今天吃什么？</h3>
+                <p class="text-sm text-gray-500 mb-6">选择你的预算，让命运决定这一餐！</p>
+                
+                <div x-show="!randomResult" class="space-y-3">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">选择人均预算</p>
+                    <div class="grid grid-cols-1 gap-3">
+                        <button @click="pickRandom(1)" class="p-3 rounded-xl border border-gray-200 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all font-medium text-gray-600 flex justify-between items-center group">
+                            <span>💸 实惠简餐</span> <span class="font-bold text-gray-300 group-hover:text-green-600">$20以内</span>
+                        </button>
+                        <button @click="pickRandom(2)" class="p-3 rounded-xl border border-gray-200 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all font-medium text-gray-600 flex justify-between items-center group">
+                            <span>🍝 休闲聚餐</span> <span class="font-bold text-gray-300 group-hover:text-orange-600">$20-40</span>
+                        </button>
+                        <button @click="pickRandom(3)" class="p-3 rounded-xl border border-gray-200 hover:border-purple-500 hover:bg-purple-50 hover:text-purple-700 transition-all font-medium text-gray-600 flex justify-between items-center group">
+                            <span>🍷 精致享受</span> <span class="font-bold text-gray-300 group-hover:text-purple-600">$40以上</span>
+                        </button>
+                        <button @click="pickRandom('All')" class="p-3 rounded-xl border border-gray-200 hover:border-gray-800 hover:bg-gray-50 hover:text-black transition-all font-medium text-gray-500">
+                            🤷‍♂️ 都可以 / 随便
+                        </button>
+                    </div>
+                </div>
+
+                <div x-show="randomResult" class="text-left" x-transition:enter="transition ease-out duration-500 delay-100">
+                    <div class="relative bg-white border-2 border-orange-100 rounded-xl p-5 shadow-sm mt-2">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-500" x-text="randomResult?.suburb"></span>
+                            <span class="text-lg" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-1" x-text="randomResult?.name"></h4>
+                        <p class="text-xs text-teal-600 font-bold uppercase mb-3" x-text="randomResult?.category"></p>
+                        <p class="text-sm text-gray-600 mb-4 leading-relaxed" x-text="randomResult?.desc"></p>
+                        <div class="flex flex-wrap gap-1 mb-4">
+                            <template x-for="dish in randomResult?.dishes">
+                                <span class="text-[10px] px-2 py-1 bg-orange-50 text-orange-700 rounded border border-orange-100" x-text="dish"></span>
+                            </template>
+                        </div>
+                        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult?.name + ' ' + randomResult?.suburb + ' Sydney')" target="_blank"
+                           class="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-lg transition-colors">
+                            📍 去这里吃 (Google Maps)
+                        </a>
+                    </div>
+                    
+                    <button @click="randomResult = null" class="mt-4 text-sm text-gray-400 hover:text-gray-600 underline w-full text-center">
+                        不喜欢？重选一个
+                    </button>
+                </div>
             </div>
+            
+            <button @click="showRandomizer = false; randomResult = null" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
+        <div class="flex justify-between items-end mb-6 px-1 border-b border-gray-100 pb-2">
+            <span class="text-sm text-gray-500">
+                共 <strong x-text="filteredRestaurants.length" class="text-gray-900"></strong> 家餐厅
+            </span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" x-cloak>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <template x-for="r in filteredRestaurants" :key="r.name">
                 <div class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative">
-                    
                     <div class="absolute top-0 left-0 w-1 h-full transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
                     
                     <div class="p-5 flex-1 flex flex-col pl-6">
-                        
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-100 text-gray-500" x-text="r.suburb"></span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-100" x-text="r.category"></span>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 text-gray-500" x-text="r.suburb"></span>
+                                <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-100" x-text="r.category"></span>
+                            </div>
+                            <div class="text-xs font-bold tracking-widest" :class="{
+                                'text-green-600': r.priceLevel === 1,
+                                'text-orange-500': r.priceLevel === 2,
+                                'text-purple-600': r.priceLevel === 3
+                            }" x-text="getPriceIcon(r.priceLevel)"></div>
                         </div>
                         
                         <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')" 
-                           target="_blank"
-                           class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2">
+                           target="_blank" class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2">
                             <h3 class="text-lg font-bold text-gray-900 leading-tight" x-text="r.name"></h3>
-                            <svg class="w-4 h-4 text-gray-300 group-hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            <svg class="w-4 h-4 text-gray-300 group-hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </a>
                         
                         <p class="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3" x-text="r.desc"></p>
@@ -108,7 +177,7 @@
                         <div class="mt-auto pt-3 border-t border-gray-50">
                             <div class="flex flex-wrap gap-1">
                                 <template x-for="dish in r.dishes" :key="dish">
-                                    <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-orange-50 text-orange-800 border border-orange-100" x-text="dish"></span>
+                                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-800 border border-orange-100" x-text="dish"></span>
                                 </template>
                             </div>
                         </div>
@@ -116,17 +185,14 @@
                 </div>
             </template>
         </div>
-
-        <div x-show="filteredRestaurants.length === 0" class="text-center py-16" x-cloak>
-            <div class="inline-block p-3 rounded-full bg-gray-100 mb-3">
-                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <p class="text-gray-500">该分类下暂无餐厅，换个组合试试？</p>
+        
+        <div x-show="filteredRestaurants.length === 0" class="text-center py-20" x-cloak>
+            <p class="text-gray-400">没有符合条件的餐厅，请尝试调整筛选...</p>
         </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 mt-12 py-8 text-center text-xs text-gray-400">
-        <p>Generated by Gemini • Based on Comprehensive Dining Report</p>
+    <footer class="mt-12 py-8 text-center text-xs text-gray-400 border-t border-gray-100">
+        <p>Generated by Gemini • Data based on Comprehensive Dining Report</p>
     </footer>
 
     <script>
@@ -134,108 +200,109 @@
             return {
                 search: '',
                 activeSuburb: 'All',
-                activeCategory: 'All', // 新增状态
-                
+                activeCategory: 'All',
+                activePrice: 'All', // New State
+                showRandomizer: false, // Modal State
+                randomResult: null,    // Random Pick Result
+
                 suburbs: ['All', 'Cabarita', 'Concord', 'Concord West', 'Mortlake', 'North Strathfield'],
-                
-                // 新增类别列表
                 categories: ['All', 'Italian', 'Japanese', 'Korean', 'Thai', 'Chinese', 'Vietnamese', 'Middle Eastern', 'Indian', 'Cafe', 'Western'],
 
-                // 数据源 (已全部打上 Category 标签)
+                // 核心数据：已添加 priceLevel (1: <$20, 2: $20-40, 3: >$40)
                 restaurants: [
                     // --- Cabarita ---
-                    { name: "Angelo’s Cabarita", suburb: "Cabarita", category: "Italian", desc: "拥有永恒的优雅与绝佳海湾景观。平衡传统意大利工艺与现代澳洲农产品。", dishes: ["和牛土豆面疙瘩", "海鲜拼盘", "桌边提拉米苏"] },
-                    { name: "Vela Dining & Bar", suburb: "Cabarita", category: "Western", desc: "坐落于游艇码头，提供精致地中海餐饮和休闲日落酒吧双重体验。", dishes: ["双人海鲜拼盘", "慢炖羊肩肉", "焗扇贝"] },
-                    { name: "Sanders Kiosk", suburb: "Cabarita", category: "Cafe", desc: "亲民的社区补给站，位于遗产建筑中。提供超越标准的咖啡馆餐饮。", dishes: ["炸鸡排汉堡", "烤柠檬鳎鱼", "热带冰沙"] },
+                    { name: "Angelo’s Cabarita", suburb: "Cabarita", category: "Italian", priceLevel: 3, desc: "该区的皇冠明珠，拥有永恒的优雅与绝佳海湾景观。平衡传统意大利工艺与现代澳洲农产品。", dishes: ["和牛土豆面疙瘩", "海鲜拼盘", "桌边提拉米苏"] },
+                    { name: "Vela Dining & Bar", suburb: "Cabarita", category: "Western", priceLevel: 3, desc: "坐落于游艇码头，提供精致地中海餐饮和休闲日落酒吧双重体验。", dishes: ["双人海鲜拼盘", "慢炖羊肩肉", "焗扇贝"] },
+                    { name: "Sanders Kiosk", suburb: "Cabarita", category: "Cafe", priceLevel: 1, desc: "亲民的社区补给站，位于遗产建筑中。提供超越标准的咖啡馆餐饮。", dishes: ["炸鸡排汉堡", "烤柠檬鳎鱼", "热带冰沙"] },
                     
                     // --- Concord ---
-                    { name: "Fratelli & Co.", suburb: "Concord", category: "Italian", desc: "繁忙的现代意大利家庭餐馆。专注于木火烹饪和慷慨的分享份量。", dishes: ["博斯卡伊奥拉鸡宽面", "木火比萨", "炸西葫芦花"] },
-                    { name: "Sud - Southern Italian", suburb: "Concord", category: "Italian", desc: "专注意大利南部街头美食，氛围热闹。强调“从头吃到尾”和正宗区域食谱。", dishes: ["海鲜炖饭", "诺玛意面", "炭烤羊排"] },
-                    { name: "Spuntini", suburb: "Concord", category: "Italian", desc: "现代意大利小酒馆，专注小吃(Spuntini)和分享盘。", dishes: ["Yamba大虾螺旋面", "和牛后腿肉", "豌豆挞"] },
-                    { name: "Cucina Espresso", suburb: "Concord", category: "Cafe", desc: "模糊了高端咖啡馆与餐厅的界限。以创新早午餐和意大利风味早餐闻名。", dishes: ["早餐炸饭团", "意式烘蛋", "西葫芦花"] },
-                    { name: "Paperboy", suburb: "Concord", category: "Cafe", desc: "潮流引领者，极简时尚风。将亚洲融合元素融入澳洲早午餐。", dishes: ["富士山(抹茶)", "日出卷", "印尼炒面 3.0"] },
-                    { name: "The Rusty Rabbit", suburb: "Concord", category: "Cafe", desc: "充满活力的早午餐点，份量慷慨。以颓废的甜点早餐著称。", dishes: ["瑞可塔芝士松饼", "红薯玉米饼", "早餐卷"] },
-                    { name: "Majors Bay Sushi", suburb: "Concord", category: "Japanese", desc: "可靠且新鲜的寿司体验，提供慷慨的刺身切片。", dishes: ["炙烤三文鱼握寿司", "炸鸡排牛油果卷", "刺身拼盘"] },
-                    { name: "Kokoro Japanese", suburb: "Concord", category: "Japanese", desc: "寿司吧与铁板烧双重概念，氛围热闹。", dishes: ["咖喱炸鸡排饭", "照烧三文鱼", "特制加州卷"] },
-                    { name: "Daikoku Teppanyaki", suburb: "Concord", category: "Japanese", desc: "以铁板烧表演为中心的戏剧性用餐体验。", dishes: ["辣猪肉包", "羊排与大虾", "牛排与带子"] },
-                    { name: "Yum Yum Bakery", suburb: "Concord", category: "Middle Eastern", desc: "屡获殊荣的黎巴嫩烘焙坊。以周末排队的黎巴嫩比萨(Manoush)闻名。", dishes: ["肉与芝士Manoush", "扎塔Manoush", "沙瓦玛拼盘"] },
-                    { name: "Munoushee", suburb: "Concord", category: "Middle Eastern", desc: "专注面团质量的黎巴嫩比萨吧。当地人早餐首选。", dishes: ["豪华Munoushee", "肉比萨(Lahembajin)", "黎巴嫩大早餐"] },
-                    { name: "Baywok", suburb: "Concord", category: "Thai", desc: "历史悠久的泰国机构，平衡传统食谱与澳式口味。", dishes: ["玛莎曼牛肉咖喱", "泰式炒粉", "椒盐鱿鱼"] },
-                    { name: "The Backyard", suburb: "Concord", category: "Western", desc: "位于Briars俱乐部内的美食概念，主打自制烟熏肉类。", dishes: ["烟熏肉拼盘", "现代海鲜拼盘", "炸花菜"] },
-                    { name: "The Concord Club", suburb: "Concord", category: "Western", desc: "传统的欧式小酒馆体验(RSL)。强调丰盛的烤肉和炸肉排。", dishes: ["每日烤肉", "炸鸡排", "烤鱼"] },
-                    { name: "Crust Pizza", suburb: "Concord", category: "Italian", desc: "高端美食比萨连锁，专注于新鲜食材和创意配料。", dishes: ["Peri-Peri鸡肉比萨", "四川辣鸡比萨", "素食至尊"] },
-                    { name: "Shareef’s", suburb: "Concord", category: "Middle Eastern", desc: "怀旧复古的贝鲁特风格“社交俱乐部”。正宗沙瓦玛。", dishes: ["经典鸡肉沙瓦玛", "解构羊肉沙瓦玛", "经典法拉费"] },
-                    { name: "Frango", suburb: "Concord", category: "Western", desc: "传奇的葡萄牙炭烤鸡店。独特的炭火烟味和神级辣椒酱。", dishes: ["炭烤鸡", "葡萄牙鸡肉汉堡", "Frango辣椒酱"] },
-                    { name: "Sugar Muma’s", suburb: "Concord", category: "Cafe", desc: "专攻甜食的甜点吧。满载奶昔和冷冻甜点。", dishes: ["巴西莓杯", "Biscoff奶昔", "奥利奥奶昔"] },
-                    { name: "M.J & Co.", suburb: "Concord", category: "Western", desc: "休闲希腊食肆，专注Souvlaki和Gyros。", dishes: ["Gyros拼盘", "希腊沙拉", "Souvlaki卷"] },
-                    { name: "Zeus Street Greek", suburb: "Concord", category: "Western", desc: "现代快速休闲希腊菜。工业时尚风，强调诚信食物。", dishes: ["Uncle Tzimmy皮塔卷", "哈罗米薯条", "斯巴达盒"] },
-                    { name: "Donerci Kazims", suburb: "Concord", category: "Middle Eastern", desc: "专攻土耳其美食，以旋转烤肉和Pide为中心。", dishes: ["混合烤肉拼盘", "菠菜芝士Pide", "牛肉零食盒(HSP)"] },
-                    { name: "Espresso 96", suburb: "Concord", category: "Cafe", desc: "紧凑活力的咖啡馆。提供生食/无麸质点心和丰盛汉堡。", dishes: ["早餐汉堡", "生食点心", "精品咖啡"] },
-                    { name: "The Family Brasserie", suburb: "Concord", category: "Western", desc: "RSL内的典型俱乐部餐饮。从亚洲炒菜到经典烤肉。", dishes: ["帕尔马干酪鸡排", "烤猪肉", "渔夫篮"] },
+                    { name: "Fratelli & Co.", suburb: "Concord", category: "Italian", priceLevel: 2, desc: "繁忙的现代意大利家庭餐馆。专注于木火烹饪和慷慨的分享份量。", dishes: ["博斯卡伊奥拉鸡宽面", "木火比萨", "炸西葫芦花"] },
+                    { name: "Sud - Southern Italian", suburb: "Concord", category: "Italian", priceLevel: 2, desc: "专注意大利南部街头美食，氛围热闹。强调“从头吃到尾”和正宗区域食谱。", dishes: ["海鲜炖饭", "诺玛意面", "炭烤羊排"] },
+                    { name: "Spuntini", suburb: "Concord", category: "Italian", priceLevel: 2, desc: "现代意大利小酒馆，专注小吃(Spuntini)和分享盘。", dishes: ["Yamba大虾螺旋面", "和牛后腿肉", "豌豆挞"] },
+                    { name: "Cucina Espresso", suburb: "Concord", category: "Cafe", priceLevel: 2, desc: "模糊了高端咖啡馆与餐厅的界限。以创新早午餐和意大利风味早餐闻名。", dishes: ["早餐炸饭团", "意式烘蛋", "西葫芦花"] },
+                    { name: "Paperboy", suburb: "Concord", category: "Cafe", priceLevel: 2, desc: "潮流引领者，极简时尚风。将亚洲融合元素融入澳洲早午餐。", dishes: ["富士山(抹茶)", "日出卷", "印尼炒面 3.0"] },
+                    { name: "The Rusty Rabbit", suburb: "Concord", category: "Cafe", priceLevel: 2, desc: "充满活力的早午餐点，份量慷慨。以颓废的甜点早餐著称。", dishes: ["瑞可塔芝士松饼", "红薯玉米饼", "早餐卷"] },
+                    { name: "Majors Bay Sushi", suburb: "Concord", category: "Japanese", priceLevel: 1, desc: "可靠且新鲜的寿司体验，提供慷慨的刺身切片。", dishes: ["炙烤三文鱼握寿司", "炸鸡排牛油果卷", "刺身拼盘"] },
+                    { name: "Kokoro Japanese", suburb: "Concord", category: "Japanese", priceLevel: 2, desc: "寿司吧与铁板烧双重概念，氛围热闹。", dishes: ["咖喱炸鸡排饭", "照烧三文鱼", "特制加州卷"] },
+                    { name: "Daikoku Teppanyaki", suburb: "Concord", category: "Japanese", priceLevel: 3, desc: "以铁板烧表演为中心的戏剧性用餐体验。", dishes: ["辣猪肉包", "羊排与大虾", "牛排与带子"] },
+                    { name: "Yum Yum Bakery", suburb: "Concord", category: "Middle Eastern", priceLevel: 1, desc: "屡获殊荣的黎巴嫩烘焙坊。以周末排队的黎巴嫩比萨(Manoush)闻名。", dishes: ["肉与芝士Manoush", "扎塔Manoush", "沙瓦玛拼盘"] },
+                    { name: "Munoushee", suburb: "Concord", category: "Middle Eastern", priceLevel: 1, desc: "专注面团质量的黎巴嫩比萨吧。当地人早餐首选。", dishes: ["豪华Munoushee", "肉比萨(Lahembajin)", "黎巴嫩大早餐"] },
+                    { name: "Baywok", suburb: "Concord", category: "Thai", priceLevel: 2, desc: "历史悠久的泰国机构，平衡传统食谱与澳式口味。", dishes: ["玛莎曼牛肉咖喱", "泰式炒粉", "椒盐鱿鱼"] },
+                    { name: "The Backyard", suburb: "Concord", category: "Western", priceLevel: 2, desc: "位于Briars俱乐部内的美食概念，主打自制烟熏肉类。", dishes: ["烟熏肉拼盘", "现代海鲜拼盘", "炸花菜"] },
+                    { name: "The Concord Club", suburb: "Concord", category: "Western", priceLevel: 2, desc: "传统的欧式小酒馆体验(RSL)。强调丰盛的烤肉和炸肉排。", dishes: ["每日烤肉", "炸鸡排", "烤鱼"] },
+                    { name: "Crust Pizza", suburb: "Concord", category: "Italian", priceLevel: 2, desc: "高端美食比萨连锁，专注于新鲜食材和创意配料。", dishes: ["Peri-Peri鸡肉比萨", "四川辣鸡比萨", "素食至尊"] },
+                    { name: "Shareef’s", suburb: "Concord", category: "Middle Eastern", priceLevel: 2, desc: "怀旧复古的贝鲁特风格“社交俱乐部”。正宗沙瓦玛。", dishes: ["经典鸡肉沙瓦玛", "解构羊肉沙瓦玛", "经典法拉费"] },
+                    { name: "Frango", suburb: "Concord", category: "Western", priceLevel: 1, desc: "传奇的葡萄牙炭烤鸡店。独特的炭火烟味和神级辣椒酱。", dishes: ["炭烤鸡", "葡萄牙鸡肉汉堡", "Frango辣椒酱"] },
+                    { name: "Sugar Muma’s", suburb: "Concord", category: "Cafe", priceLevel: 1, desc: "专攻甜食的甜点吧。满载奶昔和冷冻甜点。", dishes: ["巴西莓杯", "Biscoff奶昔", "奥利奥奶昔"] },
+                    { name: "M.J & Co.", suburb: "Concord", category: "Western", priceLevel: 1, desc: "休闲希腊食肆，专注Souvlaki和Gyros。", dishes: ["Gyros拼盘", "希腊沙拉", "Souvlaki卷"] },
+                    { name: "Zeus Street Greek", suburb: "Concord", category: "Western", priceLevel: 2, desc: "现代快速休闲希腊菜。工业时尚风，强调诚信食物。", dishes: ["Uncle Tzimmy皮塔卷", "哈罗米薯条", "斯巴达盒"] },
+                    { name: "Donerci Kazims", suburb: "Concord", category: "Middle Eastern", priceLevel: 2, desc: "专攻土耳其美食，以旋转烤肉和Pide为中心。", dishes: ["混合烤肉拼盘", "菠菜芝士Pide", "牛肉零食盒(HSP)"] },
+                    { name: "Espresso 96", suburb: "Concord", category: "Cafe", priceLevel: 1, desc: "紧凑活力的咖啡馆。提供生食/无麸质点心和丰盛汉堡。", dishes: ["早餐汉堡", "生食点心", "精品咖啡"] },
+                    { name: "The Family Brasserie", suburb: "Concord", category: "Western", priceLevel: 2, desc: "RSL内的典型俱乐部餐饮。从亚洲炒菜到经典烤肉。", dishes: ["帕尔马干酪鸡排", "烤猪肉", "渔夫篮"] },
 
                     // --- Concord West ---
-                    { name: "Mattina", suburb: "Concord West", category: "Cafe", desc: "遗产风格建筑内的迷人咖啡馆，舒适乡村气息。", dishes: ["烘蛋", "帕尔马火腿开放三明治", "蘑菇吐司"] },
-                    { name: "Cafe Seed", suburb: "Concord West", category: "Cafe", desc: "现代通透的咖啡馆，宠物友好。多功能全天候场所。", dishes: ["辣椒炒蛋", "BBB健康碗", "日式炸鸡汉堡"] },
-                    { name: "Three Spoons", suburb: "Concord West", category: "Cafe", desc: "古雅社区咖啡馆，像家一样的客厅感。", dishes: ["大早餐", "法式吐司", "澳白咖啡"] },
-                    { name: "ThreeOneNine", suburb: "Concord West", category: "Western", desc: "现代澳式餐饮，带有微妙亚洲影响。强调新鲜海鲜。", dishes: ["斯坎皮虾杂烩浓汤", "虾多士", "越南鸡肉沙拉"] },
-                    { name: "Pajuok", suburb: "Concord West", category: "Korean", desc: "正宗韩国餐厅，专攻传统汤类(特别是猪肉汤)和米饭。", dishes: ["猪肉汤饭", "雪浓汤", "白切肉"] },
-                    { name: "Flamin Grillz", suburb: "Concord West", category: "Western", desc: "迎合肉食者的美式餐馆风格。专注排骨、汉堡和牛排。", dishes: ["BBQ猪肋排", "美食汉堡", "牛排薯条"] },
-                    { name: "Victoria Village", suburb: "Concord West", category: "Chinese", desc: "传统郊区中餐馆，提供怀旧的粤菜和澳式中餐。", dishes: ["蜜糖鸡", "蒙古羊肉", "特色炒饭"] },
-                    { name: "Hotel Concord Bistro", suburb: "Concord West", category: "Western", desc: "现代化酒吧餐饮空间，提供炸肉排等广泛菜单。", dishes: ["炸鸡排", "后腿牛排", "汉堡"] },
-                    { name: "Casa Bella Pizza", suburb: "Concord West", category: "Italian", desc: "经典邻里意大利餐厅，温暖的“红酱”氛围。", dishes: ["至尊比萨", "水牛城比萨", "阿尔弗雷多鸡肉意面"] },
+                    { name: "Mattina", suburb: "Concord West", category: "Cafe", priceLevel: 2, desc: "遗产风格建筑内的迷人咖啡馆，舒适乡村气息。", dishes: ["烘蛋", "帕尔马火腿开放三明治", "蘑菇吐司"] },
+                    { name: "Cafe Seed", suburb: "Concord West", category: "Cafe", priceLevel: 2, desc: "现代通透的咖啡馆，宠物友好。多功能全天候场所。", dishes: ["辣椒炒蛋", "BBB健康碗", "日式炸鸡汉堡"] },
+                    { name: "Three Spoons", suburb: "Concord West", category: "Cafe", priceLevel: 1, desc: "古雅社区咖啡馆，像家一样的客厅感。", dishes: ["大早餐", "法式吐司", "澳白咖啡"] },
+                    { name: "ThreeOneNine", suburb: "Concord West", category: "Western", priceLevel: 2, desc: "现代澳式餐饮，带有微妙亚洲影响。强调新鲜海鲜。", dishes: ["斯坎皮虾杂烩浓汤", "虾多士", "越南鸡肉沙拉"] },
+                    { name: "Pajuok", suburb: "Concord West", category: "Korean", priceLevel: 2, desc: "正宗韩国餐厅，专攻传统汤类(特别是猪肉汤)和米饭。", dishes: ["猪肉汤饭", "雪浓汤", "白切肉"] },
+                    { name: "Flamin Grillz", suburb: "Concord West", category: "Western", priceLevel: 2, desc: "迎合肉食者的美式餐馆风格。专注排骨、汉堡和牛排。", dishes: ["BBQ猪肋排", "美食汉堡", "牛排薯条"] },
+                    { name: "Victoria Village", suburb: "Concord West", category: "Chinese", priceLevel: 1, desc: "传统郊区中餐馆，提供怀旧的粤菜和澳式中餐。", dishes: ["蜜糖鸡", "蒙古羊肉", "特色炒饭"] },
+                    { name: "Hotel Concord Bistro", suburb: "Concord West", category: "Western", priceLevel: 2, desc: "现代化酒吧餐饮空间，提供炸肉排等广泛菜单。", dishes: ["炸鸡排", "后腿牛排", "汉堡"] },
+                    { name: "Casa Bella Pizza", suburb: "Concord West", category: "Italian", priceLevel: 2, desc: "经典邻里意大利餐厅，温暖的“红酱”氛围。", dishes: ["至尊比萨", "水牛城比萨", "阿尔弗雷多鸡肉意面"] },
                     
                     // --- Mortlake ---
-                    { name: "The Issen Fresh Sushi", suburb: "Mortlake", category: "Japanese", desc: "隐秘宝石，日韩融合菜。菜单创新，包含海胆意面。", dishes: ["海胆奶油意面", "刺身塔可", "章鱼华夫饼"] },
-                    { name: "Miz Tutti Pizzeria", suburb: "Mortlake", category: "Italian", desc: "充满活力的当地意大利中心，以木火比萨闻名。", dishes: ["食肉者比萨", "牛肉肉酱意面", "炸鱿鱼"] },
-                    { name: "Son of Dennis", suburb: "Mortlake", category: "Cafe", desc: "现代时尚咖啡馆。专注高质量烤三明治、健康碗。", dishes: ["烟熏哈罗米烤三明治", "巴西莓碗", "辣鸡佛卡夏"] },
-                    { name: "Maison Mornings", suburb: "Mortlake", category: "Cafe", desc: "提供精致体验的优雅咖啡馆。适合悠闲早餐。", dishes: ["高级牛油果吐司", "精品咖啡", "早午餐盘"] },
-                    { name: "Mortlake Ocean Food", suburb: "Mortlake", category: "Western", desc: "经典澳式炸鱼薯条店。老派实用，专注海鲜新鲜度。", dishes: ["炸鱼薯条", "土豆饼", "炸鱿鱼圈"] },
-                    { name: "Wolfpack Coffee", suburb: "Mortlake", category: "Cafe", desc: "精品咖啡烘焙商和咖啡馆。工业风。", dishes: ["拼配咖啡", "单品手冲", "新鲜糕点"] },
-                    { name: "Dazed Cafe", suburb: "Mortlake", category: "Cafe", desc: "当地早起咖啡点，提供轻松环境和快速补给。", dishes: ["晨间咖啡", "培根蛋卷", "轻食"] },
+                    { name: "The Issen Fresh Sushi", suburb: "Mortlake", category: "Japanese", priceLevel: 2, desc: "隐秘宝石，日韩融合菜。菜单创新，包含海胆意面。", dishes: ["海胆奶油意面", "刺身塔可", "章鱼华夫饼"] },
+                    { name: "Miz Tutti Pizzeria", suburb: "Mortlake", category: "Italian", priceLevel: 2, desc: "充满活力的当地意大利中心，以木火比萨闻名。", dishes: ["食肉者比萨", "牛肉肉酱意面", "炸鱿鱼"] },
+                    { name: "Son of Dennis", suburb: "Mortlake", category: "Cafe", priceLevel: 2, desc: "现代时尚咖啡馆。专注高质量烤三明治、健康碗。", dishes: ["烟熏哈罗米烤三明治", "巴西莓碗", "辣鸡佛卡夏"] },
+                    { name: "Maison Mornings", suburb: "Mortlake", category: "Cafe", priceLevel: 2, desc: "提供精致体验的优雅咖啡馆。适合悠闲早餐。", dishes: ["高级牛油果吐司", "精品咖啡", "早午餐盘"] },
+                    { name: "Mortlake Ocean Food", suburb: "Mortlake", category: "Western", priceLevel: 1, desc: "经典澳式炸鱼薯条店。老派实用，专注海鲜新鲜度。", dishes: ["炸鱼薯条", "土豆饼", "炸鱿鱼圈"] },
+                    { name: "Wolfpack Coffee", suburb: "Mortlake", category: "Cafe", priceLevel: 2, desc: "精品咖啡烘焙商和咖啡馆。工业风。", dishes: ["拼配咖啡", "单品手冲", "新鲜糕点"] },
+                    { name: "Dazed Cafe", suburb: "Mortlake", category: "Cafe", priceLevel: 1, desc: "当地早起咖啡点，提供轻松环境和快速补给。", dishes: ["晨间咖啡", "培根蛋卷", "轻食"] },
 
                     // --- North Strathfield ---
-                    { name: "The Brew Spot", suburb: "North Strathfield", category: "Cafe", desc: "位于音乐学院，连接教育与社区。提供精品咖啡。", dishes: ["精品咖啡", "酸种三明治", "早午餐"] },
-                    { name: "La Lune Market", suburb: "North Strathfield", category: "Cafe", desc: "韩国人经营的审美系咖啡馆。以满载三明治和精致糕点闻名。", dishes: ["招牌鸡肉三明治", "草莓抹茶", "巴斯克芝士蛋糕"] },
-                    { name: "August Coffee", suburb: "North Strathfield", category: "Cafe", desc: "网红咖啡馆，以小熊冰块和视觉惊艳饮品著称。", dishes: ["冰樱桃抹茶拿铁", "烤蔬菜和帕尔马火腿", "秋季谷物丰收"] },
-                    { name: "Bar Biscotti", suburb: "North Strathfield", category: "Cafe", desc: "Bakehouse Quarter内的繁忙咖啡馆。混合烘焙与丰盛餐点。", dishes: ["地中海土豆与鸡蛋", "鸡肉卷", "曲奇可颂"] },
-                    { name: "I Gladiatori", suburb: "North Strathfield", category: "Italian", desc: "罗马风情餐厅，专攻轻盈气孔多的Pinsa Romana。", dishes: ["Pinsa比萨", "电话线炸饭团", "肉酱面疙瘩"] },
-                    { name: "SAN SAN", suburb: "North Strathfield", category: "Cafe", desc: "创意三明治吧，现代熟食店风格。专注优质馅料。", dishes: ["美食三明治", "精品咖啡", "熟食"] },
-                    { name: "Late Night Table", suburb: "North Strathfield", category: "Korean", desc: "时尚韩式融合餐吧(Pocha)，夜生活热点。专注内脏料理。", dishes: ["烤牛大肠", "蜂巢米酒", "海胆油意面"] },
-                    { name: "Noodlee", suburb: "North Strathfield", category: "Chinese", desc: "中式面条和快餐，适合学生。", dishes: ["牛肉面", "炒面", "快餐便当"] },
-                    { name: "Myeongdong", suburb: "North Strathfield", category: "Korean", desc: "以慷慨小菜(Banchan)和家庭共享火锅闻名的传统韩国餐厅。", dishes: ["土豆排骨汤", "大虾土豆可乐饼", "海鲜葱饼"] },
-                    { name: "Mister Gee", suburb: "North Strathfield", category: "Western", desc: "从餐车起家，“爆汁汉堡”的代名词。休闲酷炫。", dishes: ["松露汉堡", "Cheese Boogie", "松露薯条"] },
-                    { name: "Outback Steakhouse", suburb: "North Strathfield", category: "Western", desc: "著名国际连锁，美式牛排馆体验。份量大。", dishes: ["炸洋葱花", "肉眼牛排", "美式肋排"] },
-                    { name: "Kosuke Ramen", suburb: "North Strathfield", category: "Japanese", desc: "正宗日式拉面，以自制面条和浓厚肉汤为荣。", dishes: ["豚骨拉面", "沾面", "日式炸鸡"] },
-                    { name: "Yuzu Dining", suburb: "North Strathfield", category: "Japanese", desc: "精致日式用餐体验，结合传统与现代。", dishes: ["豪华寿司刺身", "爆米花虾", "和牛料理"] },
-                    { name: "Yume Sushi", suburb: "North Strathfield", category: "Japanese", desc: "受欢迎的日料，以糙米寿司和慷慨份量平衡健康与美味。", dishes: ["照烧鸡肉糙米卷", "炸鸡乌冬面", "和牛饭"] },
-                    { name: "Thai Paragon", suburb: "North Strathfield", category: "Thai", desc: "稍微高档的泰式体验，注重呈现。", dishes: ["菠萝炒饭", "热带鸭肉咖喱", "冬阴功汤"] },
-                    { name: "Pron Prohm Thai", suburb: "North Strathfield", category: "Thai", desc: "悉尼老牌泰国餐厅(1985年)。温暖传统，口味正宗。", dishes: ["玛莎曼咖喱", "椒盐鱿鱼", "泰式炒河粉"] },
-                    { name: "Abhi's Indian", suburb: "North Strathfield", category: "Indian", desc: "悉尼印度餐饮界地标，提供超越标准的区域特色菜。", dishes: ["炸菠菜脆片", "果阿鱼咖喱", "马萨拉薄饼"] },
-                    { name: "Delhi Palace", suburb: "North Strathfield", category: "Indian", desc: "经典印度用餐体验，广泛的咖喱。家庭导向。", dishes: ["黄油鸡", "罗赫恩羊肉", "坦都里烤鸡"] },
-                    { name: "The Taste of Village", suburb: "North Strathfield", category: "Indian", desc: "专注北印度和印支美食。宴会式用餐，香料正宗。", dishes: ["山羊咖喱", "黄油鸡", "Malai Kofta"] },
-                    { name: "Jongro Hwaro BBQ", suburb: "North Strathfield", category: "Korean", desc: "正宗韩国炭火BBQ，复制首尔钟路区氛围。", dishes: ["和牛套餐", "厚切猪五花", "铁板玉米芝士"] },
-                    { name: "Liu Rose", suburb: "North Strathfield", category: "Chinese", desc: "始于1971年的老牌粤菜馆。怀旧体验。", dishes: ["梅子酱烧鸭", "辣子鸡", "干煸四季豆"] },
-                    { name: "Shone Chi Kitchen", suburb: "North Strathfield", category: "Chinese", desc: "川菜火辣风味。注重辣椒和花椒的大胆使用。", dishes: ["红烧肉", "蹄花汤", "红油抄手"] },
-                    { name: "North Strathfield Hotel", suburb: "North Strathfield", category: "Western", desc: "当地酒吧(The Bakehouse)，活力氛围。经典澳洲酒吧菜。", dishes: ["汉堡", "炸肉排", "牛排"] },
-                    { name: "Baan Raun Thai", suburb: "North Strathfield", category: "Thai", desc: "谦虚的家庭经营泰式厨房。专注传统食谱。", dishes: ["泰式炒河粉", "玛莎曼咖喱", "菠萝炒饭"] },
-                    { name: "The Savoury", suburb: "North Strathfield", category: "Vietnamese", desc: "现代越南美食，空间大。用优质食材提升街头美食。", dishes: ["特级和牛Pho", "烤猪肉檬粉", "摇摇牛肉"] },
-                    { name: "Thuan Thien Bakery", suburb: "North Strathfield", category: "Vietnamese", desc: "经典越南面包店，以新鲜面包和越南包(Banh Mi)闻名。", dishes: ["越南包(Banh Mi)", "肉派", "面包"] },
-                    { name: "Queen St Cafe", suburb: "North Strathfield", category: "Cafe", desc: "邻里咖啡点，提供咖啡和简餐。", dishes: ["咖啡", "三明治", "早餐盘"] },
-                    { name: "Cafe 93", suburb: "North Strathfield", category: "Cafe", desc: "车站附近的咖啡点，快速补给。", dishes: ["早餐盘", "咖啡", "外带简餐"] }
+                    { name: "The Brew Spot", suburb: "North Strathfield", category: "Cafe", priceLevel: 1, desc: "位于音乐学院，连接教育与社区。提供精品咖啡。", dishes: ["精品咖啡", "酸种三明治", "早午餐"] },
+                    { name: "La Lune Market", suburb: "North Strathfield", category: "Cafe", priceLevel: 2, desc: "韩国人经营的审美系咖啡馆。以满载三明治和精致糕点闻名。", dishes: ["招牌鸡肉三明治", "草莓抹茶", "巴斯克芝士蛋糕"] },
+                    { name: "August Coffee", suburb: "North Strathfield", category: "Cafe", priceLevel: 2, desc: "网红咖啡馆，以小熊冰块和视觉惊艳饮品著称。", dishes: ["冰樱桃抹茶拿铁", "烤蔬菜和帕尔马火腿", "秋季谷物丰收"] },
+                    { name: "Bar Biscotti", suburb: "North Strathfield", category: "Cafe", priceLevel: 1, desc: "Bakehouse Quarter内的繁忙咖啡馆。混合烘焙与丰盛餐点。", dishes: ["地中海土豆与鸡蛋", "鸡肉卷", "曲奇可颂"] },
+                    { name: "I Gladiatori", suburb: "North Strathfield", category: "Italian", priceLevel: 2, desc: "罗马风情餐厅，专攻轻盈气孔多的Pinsa Romana。", dishes: ["Pinsa比萨", "电话线炸饭团", "肉酱面疙瘩"] },
+                    { name: "SAN SAN", suburb: "North Strathfield", category: "Cafe", priceLevel: 2, desc: "创意三明治吧，现代熟食店风格。专注优质馅料。", dishes: ["美食三明治", "精品咖啡", "熟食"] },
+                    { name: "Late Night Table", suburb: "North Strathfield", category: "Korean", priceLevel: 2, desc: "时尚韩式融合餐吧(Pocha)，夜生活热点。专注内脏料理。", dishes: ["烤牛大肠", "蜂巢米酒", "海胆油意面"] },
+                    { name: "Noodlee", suburb: "North Strathfield", category: "Chinese", priceLevel: 1, desc: "中式面条和快餐，适合学生。", dishes: ["牛肉面", "炒面", "快餐便当"] },
+                    { name: "Myeongdong", suburb: "North Strathfield", category: "Korean", priceLevel: 2, desc: "以慷慨小菜(Banchan)和家庭共享火锅闻名的传统韩国餐厅。", dishes: ["土豆排骨汤", "大虾土豆可乐饼", "海鲜葱饼"] },
+                    { name: "Mister Gee", suburb: "North Strathfield", category: "Western", priceLevel: 2, desc: "从餐车起家，“爆汁汉堡”的代名词。休闲酷炫。", dishes: ["松露汉堡", "Cheese Boogie", "松露薯条"] },
+                    { name: "Outback Steakhouse", suburb: "North Strathfield", category: "Western", priceLevel: 3, desc: "著名国际连锁，美式牛排馆体验。份量大。", dishes: ["炸洋葱花", "肉眼牛排", "美式肋排"] },
+                    { name: "Kosuke Ramen", suburb: "North Strathfield", category: "Japanese", priceLevel: 2, desc: "正宗日式拉面，以自制面条和浓厚肉汤为荣。", dishes: ["豚骨拉面", "沾面", "日式炸鸡"] },
+                    { name: "Yuzu Dining", suburb: "North Strathfield", category: "Japanese", priceLevel: 3, desc: "精致日式用餐体验，结合传统与现代。", dishes: ["豪华寿司刺身", "爆米花虾", "和牛料理"] },
+                    { name: "Yume Sushi", suburb: "North Strathfield", category: "Japanese", priceLevel: 2, desc: "受欢迎的日料，以糙米寿司和慷慨份量平衡健康与美味。", dishes: ["照烧鸡肉糙米卷", "炸鸡乌冬面", "和牛饭"] },
+                    { name: "Thai Paragon", suburb: "North Strathfield", category: "Thai", priceLevel: 2, desc: "稍微高档的泰式体验，注重呈现。", dishes: ["菠萝炒饭", "热带鸭肉咖喱", "冬阴功汤"] },
+                    { name: "Pron Prohm Thai", suburb: "North Strathfield", category: "Thai", priceLevel: 2, desc: "悉尼老牌泰国餐厅(1985年)。温暖传统，口味正宗。", dishes: ["玛莎曼咖喱", "椒盐鱿鱼", "泰式炒河粉"] },
+                    { name: "Abhi's Indian", suburb: "North Strathfield", category: "Indian", priceLevel: 3, desc: "悉尼印度餐饮界地标，提供超越标准的区域特色菜。", dishes: ["炸菠菜脆片", "果阿鱼咖喱", "马萨拉薄饼"] },
+                    { name: "Delhi Palace", suburb: "North Strathfield", category: "Indian", priceLevel: 2, desc: "经典印度用餐体验，广泛的咖喱。家庭导向。", dishes: ["黄油鸡", "罗赫恩羊肉", "坦都里烤鸡"] },
+                    { name: "The Taste of Village", suburb: "North Strathfield", category: "Indian", priceLevel: 2, desc: "专注北印度和印支美食。宴会式用餐，香料正宗。", dishes: ["山羊咖喱", "黄油鸡", "Malai Kofta"] },
+                    { name: "Jongro Hwaro BBQ", suburb: "North Strathfield", category: "Korean", priceLevel: 3, desc: "正宗韩国炭火BBQ，复制首尔钟路区氛围。", dishes: ["和牛套餐", "厚切猪五花", "铁板玉米芝士"] },
+                    { name: "Liu Rose", suburb: "North Strathfield", category: "Chinese", priceLevel: 2, desc: "始于1971年的老牌粤菜馆。怀旧体验。", dishes: ["梅子酱烧鸭", "辣子鸡", "干煸四季豆"] },
+                    { name: "Shone Chi Kitchen", suburb: "North Strathfield", category: "Chinese", priceLevel: 2, desc: "川菜火辣风味。注重辣椒和花椒的大胆使用。", dishes: ["红烧肉", "蹄花汤", "红油抄手"] },
+                    { name: "North Strathfield Hotel", suburb: "North Strathfield", category: "Western", priceLevel: 2, desc: "当地酒吧(The Bakehouse)，活力氛围。经典澳洲酒吧菜。", dishes: ["汉堡", "炸肉排", "牛排"] },
+                    { name: "Baan Raun Thai", suburb: "North Strathfield", category: "Thai", priceLevel: 2, desc: "谦虚的家庭经营泰式厨房。专注传统食谱。", dishes: ["泰式炒河粉", "玛莎曼咖喱", "菠萝炒饭"] },
+                    { name: "The Savoury", suburb: "North Strathfield", category: "Vietnamese", priceLevel: 2, desc: "现代越南美食，空间大。用优质食材提升街头美食。", dishes: ["特级和牛Pho", "烤猪肉檬粉", "摇摇牛肉"] },
+                    { name: "Thuan Thien Bakery", suburb: "North Strathfield", category: "Vietnamese", priceLevel: 1, desc: "经典越南面包店，以新鲜面包和越南包(Banh Mi)闻名。", dishes: ["越南包(Banh Mi)", "肉派", "面包"] },
+                    { name: "Queen St Cafe", suburb: "North Strathfield", category: "Cafe", priceLevel: 1, desc: "邻里咖啡点，提供咖啡和简餐。", dishes: ["咖啡", "三明治", "早餐盘"] },
+                    { name: "Cafe 93", suburb: "North Strathfield", category: "Cafe", priceLevel: 1, desc: "车站附近的咖啡点，快速补给。", dishes: ["早餐盘", "咖啡", "外带简餐"] }
                 ],
                 
                 get filteredRestaurants() {
                     return this.restaurants.filter(r => {
-                        // 逻辑：区域匹配 AND 类别匹配 AND 搜索匹配
                         const matchesSuburb = this.activeSuburb === 'All' || r.suburb === this.activeSuburb;
                         const matchesCategory = this.activeCategory === 'All' || r.category === this.activeCategory;
+                        const matchesPrice = this.activePrice === 'All' || r.priceLevel == this.activePrice;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
                                             r.desc.toLowerCase().includes(query) ||
                                             r.dishes.some(d => d.toLowerCase().includes(query));
                                             
-                        return matchesSuburb && matchesCategory && matchesSearch;
+                        return matchesSuburb && matchesCategory && matchesPrice && matchesSearch;
                     });
                 },
                 
@@ -248,6 +315,29 @@
                         'North Strathfield': 'bg-rose-500'
                     };
                     return colors[suburb] || 'bg-gray-400';
+                },
+
+                getPriceIcon(level) {
+                    if (level === 1) return '$';
+                    if (level === 2) return '$$';
+                    if (level === 3) return '$$$';
+                    return '';
+                },
+
+                pickRandom(priceLevel) {
+                    // 1. 先筛选出符合价位的餐厅
+                    let pool = this.restaurants;
+                    if (priceLevel !== 'All') {
+                        pool = pool.filter(r => r.priceLevel === priceLevel);
+                    }
+                    
+                    // 2. 随机抽取
+                    if (pool.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * pool.length);
+                        this.randomResult = pool[randomIndex];
+                    } else {
+                        alert("抱歉，在这个价位没有找到餐厅！");
+                    }
                 }
             }
         }
