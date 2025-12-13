@@ -68,7 +68,7 @@
                     <div :class="expanded.suburbs ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
                         <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
-                                <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 热门区域</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -116,7 +116,7 @@
                             <button @click="onlyGoodFood = !onlyGoodFood; currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
                                     class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
-                                <span>🏆 Good Food 2026</span>
+                                <span>🏆 Good Food Guide 2026</span>
                             </button>
 
                             <div class="w-px h-4 bg-gray-200 mx-1"></div>
@@ -183,7 +183,7 @@
                             </div>
 
                             <div x-show="randomResult?.isGoodFood2026" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
-                                <span class="text-xs font-bold text-gold">🏆 Good Food 2026</span>
+                                <span class="text-xs font-bold text-gold">🏆 2026</span>
                             </div>
                         </div>
 
@@ -370,7 +370,6 @@
                 activePrices: [],
                 activeStars: [],
                 
-                // 新增状态：只看 Good Food Guide
                 onlyGoodFood: false,
 
                 currentPage: 1,
@@ -426,15 +425,24 @@
                                 desc: row.desc || '暂无描述',
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
                                 
-                                // 新增：读取 goodfood 列
                                 isGoodFood2026: (row.goodfood && String(row.goodfood).includes('2026')) || false,
 
                                 image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
                         });
 
-                        const allSuburbs = this.restaurants.map(r => r.suburb);
-                        this.suburbs = [...new Set(allSuburbs)].sort();
+                        // 修改点：统计 Suburb 频次并只取 Top 15
+                        const suburbCounts = {};
+                        this.restaurants.forEach(r => {
+                            const s = r.suburb;
+                            suburbCounts[s] = (suburbCounts[s] || 0) + 1;
+                        });
+
+                        // 排序：数量降序 -> 截取前15 -> 字母升序 (方便用户找)
+                        this.suburbs = Object.keys(suburbCounts)
+                            .sort((a, b) => suburbCounts[b] - suburbCounts[a])
+                            .slice(0, 15)
+                            .sort();
 
                         const allCats = this.restaurants.map(r => r.category);
                         this.categories = [...new Set(allCats)].filter(c => c).sort();
