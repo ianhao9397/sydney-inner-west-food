@@ -32,14 +32,13 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-2">
                 <div class="text-center md:text-left">
                     <h1 class="text-xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食荒漠指南</p>
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
-                        <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食荒漠吃饭指南 </p>
-
-                        <button @click="shareApp()" class="text-[9px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
+                        <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
                             📤 分享
                         </button>
-                        <a href="mailto:yanghao9397@gmail.com?subject=Feedback" class="text-[9px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
+                        <a href="mailto:yanghao9397@gmail.com?subject=Feedback" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
                             💬 反馈
                         </a>
                     </div>
@@ -69,7 +68,7 @@
                     <div :class="expanded.suburbs ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
                         <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
-                                <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 热门区域</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -117,7 +116,7 @@
                             <button @click="onlyGoodFood = !onlyGoodFood; currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
                                     class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
-                                <span>🏆 Good Food Guide </span>
+                                <span>🏆 SMH Good Food Guide</span>
                             </button>
 
                             <div class="w-px h-4 bg-gray-200 mx-1"></div>
@@ -175,16 +174,16 @@
                 <div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
                     <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                         <div class="flex flex-wrap justify-center gap-2 mb-4">
-                            <span class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
+                            <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
+                            <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
                             
-                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-0.5 rounded">
+                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
                                 <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
                                 <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
                             </div>
 
-                            <div x-show="randomResult?.isGoodFood2026" class="flex items-center gap-1 bg-gray-900 px-2 py-0.5 rounded shadow-sm border border-gray-700">
-                                <span class="text-xs font-bold text-gold">🏆 2026</span>
+                            <div x-show="randomResult?.isGoodFood" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
+                                <span class="text-xs font-bold text-gold" x-text="'🏆 Good Food ' + randomResult?.goodFoodYear"></span>
                             </div>
                         </div>
 
@@ -261,8 +260,8 @@
                          </template>
                          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/5 to-transparent"></div>
                          
-                         <div x-show="r.isGoodFood2026" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
-                            <span class="text-[10px] font-bold text-gold tracking-wide">🏆 2026</span>
+                         <div x-show="r.isGoodFood" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                            <span class="text-[10px] font-bold text-gold tracking-wide" x-text="'🏆 GOOD FOOD ' + r.goodFoodYear"></span>
                          </div>
                     </div>
 
@@ -300,6 +299,11 @@
                             </div>
                             
                             <div class="flex items-center gap-2 shrink-0">
+                                <button @click.stop="shareRestaurant(r)" 
+                                        class="text-[10px] text-gray-400 hover:text-blue-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-blue-100 rounded px-1.5 py-1 hover:bg-blue-50 cursor-pointer">
+                                    <span>📤</span> 
+                                </button>
+
                                 <button @click.stop="copyKeyword(r.name)" 
                                         class="text-[10px] text-gray-400 hover:text-red-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-red-100 rounded px-1.5 py-1 hover:bg-red-50 cursor-pointer">
                                     <span>📕</span> 
@@ -342,31 +346,12 @@
         <p>Data Source: Google Sheets • Powered by Alpine.js</p>
     </footer>
 
-    <div x-show="showToast" 
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-4"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-4"
-        class="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[60] bg-gray-900/90 text-white px-6 py-3 rounded-full shadow-xl backdrop-blur-sm flex items-center gap-3 pointer-events-none"
-        x-cloak>
-        <span class="text-xl">✅</span>
-        <div class="flex flex-col">
-            <span class="text-sm font-bold" x-text="toastMessage"></span>
-            <span class="text-[10px] text-gray-400">请打开小红书粘贴搜索</span>
-        </div>
-    </div>
-
     <script>
         function diningApp() {
             return {
                 GAS_URL: 'https://script.google.com/macros/s/AKfycbyuafm1c36P2TpXBRInGPQh_4VdRq-zuNfyUmEE6ndqpv-EEf_805yvdUdfp_vHZjnGVw/exec',
 
                 search: '',
-                showToast: false,
-                toastMessage: '',
-                
                 showRandomizer: false, 
                 randomResult: null,
                 isReporting: false,
@@ -434,6 +419,9 @@
                             if(rawCat.includes('Japan')) cleanCat = 'Japanese';
                             if(rawCat.includes('Korea')) cleanCat = 'Korean';
 
+                            // 关键修改：读取 GoodFood 内容
+                            let gf = row.goodfood ? String(row.goodfood).trim() : '';
+
                             return {
                                 id: row.id || ('temp_' + index),
                                 name: row.name || '未知餐厅',
@@ -445,23 +433,24 @@
                                 desc: row.desc || '暂无描述',
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
                                 
-                                isGoodFood2026: (row.goodfood && String(row.goodfood).includes('2026')) || false,
+                                // 存储具体的年份/文字
+                                goodFoodYear: gf,
+                                // 只要有内容就为 true
+                                isGoodFood: gf.length > 0,
 
                                 image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
                         });
 
-                        // 修改点：统计 Suburb 频次并只取 Top 15
                         const suburbCounts = {};
                         this.restaurants.forEach(r => {
                             const s = r.suburb;
                             suburbCounts[s] = (suburbCounts[s] || 0) + 1;
                         });
 
-                        // 排序：数量降序 -> 截取前15 -> 字母升序 (方便用户找)
                         this.suburbs = Object.keys(suburbCounts)
                             .sort((a, b) => suburbCounts[b] - suburbCounts[a])
-                            .slice(0, 20)
+                            .slice(0, 15)
                             .sort();
 
                         const allCats = this.restaurants.map(r => r.category);
@@ -480,18 +469,9 @@
                 copyKeyword(name) {
                     if (!name) return;
                     const text = `悉尼 ${name}`;
-                    
-                    const showSuccess = () => {
-                        this.toastMessage = `已复制 "${text}"`;
-                        this.showToast = true;
-                        setTimeout(() => {
-                            this.showToast = false;
-                        }, 2000);
-                    };
-
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).then(() => {
-                            showSuccess();
+                            alert(`已复制关键词："${text}"\n请打开小红书粘贴搜索`);
                         }).catch(err => {
                             console.error('Copy failed', err);
                             prompt("请手动复制搜索词：", text);
@@ -504,7 +484,8 @@
                 shareRestaurant(r) {
                     if (!r) return;
                     let text = `发现一家好吃的！\n🏠 ${r.name}`;
-                    if(r.isGoodFood2026) text += `\n🏆 SMH Good Food Guide 2026`;
+                    // 动态分享文案
+                    if(r.isGoodFood) text += `\n🏆 SMH Good Food Guide ${r.goodFoodYear}`;
                     text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
                     
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
@@ -518,15 +499,18 @@
                 },
 
                 shareApp() {
+                    const title = this.onlyGoodFood ? '悉尼 SMH Good Food Guide 餐厅榜单' : '悉尼吃什么 | Sydney Dining Guide';
+                    const text = this.onlyGoodFood ? '快来看看这份悉尼 SMH Good Food Guide 餐厅榜单！' : '不知道吃什么？用这个随机选一下！';
+                    
                     if (navigator.share) {
                         navigator.share({
-                            title: '悉尼吃什么 | Sydney Dining Guide',
-                            text: '不知道吃什么？用这个随机选一下！',
+                            title: title,
+                            text: text,
                             url: window.location.href
                         }).catch(console.error);
                     } else {
                         navigator.clipboard.writeText(window.location.href);
-                        alert('链接已复制到剪贴板，快发给朋友吧！');
+                        alert(`链接已复制：${text}`);
                     }
                 },
 
@@ -639,7 +623,9 @@
                         const matchesCategory = this.activeCategories.length === 0 || this.activeCategories.includes(r.category);
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
-                        const matchesGoodFood = !this.onlyGoodFood || r.isGoodFood2026;
+                        
+                        // 逻辑：如果开启了 GoodFood 筛选，只看 isGoodFood 为 true 的
+                        const matchesGoodFood = !this.onlyGoodFood || r.isGoodFood;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
