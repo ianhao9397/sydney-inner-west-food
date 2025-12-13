@@ -62,7 +62,7 @@
                         <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
-                                <span class="text-[6px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
+                                <span class="text-[8px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
 
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -76,7 +76,7 @@
                         <div :class="expanded.categories ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('categories')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">🍴 类别</span>
-                                <span class="text-[10px] text-gray-400" x-text="expanded.categories ? '▲' : '▼'"></span>
+                                <span class="text-[8px] text-gray-400" x-text="expanded.categories ? '▲' : '▼'"></span>
                             </div>
 
                             <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -90,7 +90,7 @@
                         <div :class="expanded.prices ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('prices')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">💰 价位</span>
-                                <span class="text-[10px] text-gray-400" x-text="expanded.prices ? '▲' : '▼'"></span>
+                                <span class="text-[8px] text-gray-400" x-text="expanded.prices ? '▲' : '▼'"></span>
                             </div>
 
                             <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -104,7 +104,7 @@
                         <div :class="expanded.stars ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('stars')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">⭐ 推荐</span>
-                                <span class="text-[10px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
+                                <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
 
                             <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
