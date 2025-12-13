@@ -24,15 +24,15 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-2">
                 <div class="text-center md:text-left">
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
-                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食指南</p>
+                    <h1 class="text-xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食荒漠指南</p>
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
                         <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            📤 分享给朋友
+                            📤 分享
                         </button>
-                        <a href="mailto:your_email@example.com?subject=悉尼吃饭指南反馈" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            💬 反馈给作者
+                        <a href="mailto:yanghao9397@gmail.com?subject=Feedback" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
+                            💬 反馈
                         </a>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
-                                <span class="text-[10px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
+                                <span class="text-[6px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
 
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
@@ -117,7 +117,7 @@
 
                 <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-200 mt-2" @click="showFilters = !showFilters">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <span>🎯 筛选条件</span>
+                        <span>筛选条件</span>
                         <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length) > 0" 
                               class="bg-orange-100 text-orange-600 px-1.5 rounded-full text-[10px]" x-cloak>
                              已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length"></span>
