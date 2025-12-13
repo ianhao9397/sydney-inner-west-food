@@ -25,13 +25,14 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-2">
                 <div class="text-center md:text-left">
                     <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食指南</p>
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
                         <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            📤 分享
+                            📤 分享给朋友
                         </button>
                         <a href="mailto:your_email@example.com?subject=悉尼吃饭指南反馈" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            💬 反馈
+                            💬 反馈给作者
                         </a>
                     </div>
                 </div>
@@ -50,21 +51,7 @@
             </div>
 
             <div class="pb-1">
-                <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-200 mt-2" @click="showFilters = !showFilters">
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <span>🎯 筛选条件</span>
-                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length) > 0" 
-                              class="bg-orange-100 text-orange-600 px-1.5 rounded-full text-[10px]" x-cloak>
-                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length"></span>
-                        </span>
-                    </span>
-                    <button class="text-xs font-bold text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors">
-                        <span x-text="showFilters ? '收起' : '展开'"></span>
-                        <span class="transform transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''">▼</span>
-                    </button>
-                </div>
-
-                <div x-show="showFilters" x-collapse class="space-y-3">
+                <div x-show="showFilters" x-collapse class="space-y-3 pt-2">
                     <div class="overflow-x-auto hide-scroll">
                         <div class="flex space-x-2 min-w-max items-center">
                             <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">📍 区域</span>
@@ -104,6 +91,20 @@
                             <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
                         </div>
                     </div>
+                </div>
+
+                <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-200 mt-2" @click="showFilters = !showFilters">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <span>🎯 筛选条件</span>
+                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length) > 0" 
+                              class="bg-orange-100 text-orange-600 px-1.5 rounded-full text-[10px]" x-cloak>
+                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length"></span>
+                        </span>
+                    </span>
+                    <button class="text-xs font-bold text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors">
+                        <span x-text="showFilters ? '收起' : '展开'"></span>
+                        <span class="transform transition-transform duration-300" :class="showFilters ? 'rotate-180' : ''">▼</span>
+                    </button>
                 </div>
             </div>
         </div>
