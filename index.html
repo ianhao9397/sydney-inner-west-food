@@ -24,14 +24,15 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-2">
                 <div class="text-center md:text-left">
-                    <h1 class="text-xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼吃什么 | Sydney Dining Guide</h1>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">美食指南</p>
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
                         <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            📤 分享
+                            📤 分享给朋友
                         </button>
                         <a href="mailto:your_email@example.com?subject=悉尼吃饭指南反馈" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            💬 反馈
+                            💬 反馈给作者
                         </a>
                     </div>
                 </div>
@@ -49,16 +50,21 @@
 
                     <button @click="pickRandom()" 
                         class="bg-gray-900 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center gap-2 whitespace-nowrap transform hover:-translate-y-0.5">
-                        <span>🎲</span> <span class="hidden sm:inline">帮我选</span><span class="sm:hidden">随机</span>
+                        <span>🎲</span> <span class="hidden sm:inline">帮我选</span><span class="sm:hidden">帮我选</span>
                     </button>
                 </div>
             </div>
 
             <div class="pb-1">
                 <div x-show="showFilters" x-collapse class="space-y-3 pt-2">
-                    <div class="overflow-x-auto hide-scroll">
-                        <div class="flex space-x-2 min-w-max items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">📍 区域</span>
+                    
+                    <div :class="expanded.suburbs ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
+                        <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
+                            <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
+                                <span class="text-[10px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
+                            </div>
+
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="suburb in suburbs" :key="suburb">
                                 <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
@@ -66,9 +72,13 @@
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
-                        <div class="flex space-x-2 min-w-max items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">🍴 类别</span>
+                    <div class="border-t border-dashed border-gray-200 pt-2" :class="expanded.categories ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
+                        <div :class="expanded.categories ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
+                            <div @click="toggleExpand('categories')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">🍴 类别</span>
+                                <span class="text-[10px] text-gray-400" x-text="expanded.categories ? '▲' : '▼'"></span>
+                            </div>
+
                             <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="cat in categories" :key="cat">
                                 <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
@@ -76,9 +86,13 @@
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
-                        <div class="flex space-x-2 min-w-max items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">💰 价位</span>
+                    <div class="border-t border-dashed border-gray-200 pt-2" :class="expanded.prices ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
+                        <div :class="expanded.prices ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
+                            <div @click="toggleExpand('prices')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">💰 价位</span>
+                                <span class="text-[10px] text-gray-400" x-text="expanded.prices ? '▲' : '▼'"></span>
+                            </div>
+
                             <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
                             <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
@@ -86,9 +100,13 @@
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2 pb-2">
-                        <div class="flex space-x-2 min-w-max items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">⭐ 推荐</span>
+                    <div class="border-t border-dashed border-gray-200 pt-2 pb-2" :class="expanded.stars ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
+                        <div :class="expanded.stars ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
+                            <div @click="toggleExpand('stars')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">⭐ 推荐</span>
+                                <span class="text-[10px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
+                            </div>
+
                             <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
@@ -270,9 +288,16 @@
                 reportText: '报错',
                 isRandomPick: false, 
 
-                // ✨ 改动：新增洗牌模式状态
                 isShuffleMode: false,
                 shuffledList: [],
+                
+                // ✨ 改动：新增展开状态
+                expanded: {
+                    suburbs: false,
+                    categories: false,
+                    prices: false,
+                    stars: false
+                },
 
                 showFilters: true,
 
@@ -327,7 +352,11 @@
                     }
                 },
 
-                // ✨ 改动：直接复制到剪贴板
+                // ✨ 改动：新增切换展开/收起状态函数
+                toggleExpand(section) {
+                    this.expanded[section] = !this.expanded[section];
+                },
+
                 shareRestaurant(r) {
                     if (!r) return;
                     const text = `发现一家好吃的！\n🏠 ${r.name}\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
@@ -377,10 +406,8 @@
                     this.showRandomizer = true;
                 },
 
-                // ✨ 新增：洗牌视图功能
                 shuffleView() {
                     let list = [...this.filteredRestaurants];
-                    // Fisher-Yates 洗牌算法
                     for (let i = list.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [list[i], list[j]] = [list[j], list[i]];
@@ -427,7 +454,7 @@
                     } else {
                         this[targetArray].push(value);
                     }
-                    this.isShuffleMode = false; // ✨ 改动：筛选时退出洗牌模式
+                    this.isShuffleMode = false; 
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
@@ -436,7 +463,7 @@
                     if (type === 'categories') this.activeCategories = [];
                     if (type === 'prices') this.activePrices = [];
                     if (type === 'stars') this.activeStars = [];
-                    this.isShuffleMode = false; // ✨ 改动：筛选时退出洗牌模式
+                    this.isShuffleMode = false; 
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
@@ -444,7 +471,6 @@
                 get paginatedRestaurants() {
                     const start = (this.currentPage - 1) * this.itemsPerPage;
                     const end = start + this.itemsPerPage;
-                    // ✨ 改动：如果处于洗牌模式，显示已洗牌的列表
                     const source = this.isShuffleMode ? this.shuffledList : this.filteredRestaurants;
                     return source.slice(start, end);
                 },
