@@ -11,6 +11,7 @@
     
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        /* 隐藏滚动条但保留功能 */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
@@ -64,7 +65,6 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
-
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="suburb in suburbs" :key="suburb">
                                 <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
@@ -78,7 +78,6 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">🍴 类别</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.categories ? '▲' : '▼'"></span>
                             </div>
-
                             <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="cat in categories" :key="cat">
                                 <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
@@ -92,7 +91,6 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">💰 价位</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.prices ? '▲' : '▼'"></span>
                             </div>
-
                             <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
                             <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
@@ -106,7 +104,6 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">⭐ 推荐</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
-
                             <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
@@ -135,39 +132,57 @@
     <div x-show="showRandomizer" class="fixed inset-0 z-50 flex items-center justify-center px-4" x-cloak>
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="showRandomizer = false" x-transition.opacity></div>
         
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden flex flex-col" 
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden flex flex-col max-h-[85vh]" 
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
             
-            <button @click="showRandomizer = false" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors">
+            <button @click="showRandomizer = false" class="absolute top-3 right-3 z-30 w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md hover:bg-black/40 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <div class="p-6 h-[320px] flex flex-col items-center justify-center text-center relative">
-                <div class="absolute top-4 text-xs text-gray-300 font-bold tracking-widest uppercase" x-text="isRandomPick ? 'IT\'S FATE!' : 'RESTAURANT DETAIL'"></div>
-
-                <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
-                        <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
-                        
-                        <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
-                            <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
-                            <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+            <div class="overflow-y-auto hide-scroll flex-1 relative bg-white">
+                
+                <div class="w-full h-56 shrink-0 relative bg-gray-100">
+                    <template x-if="randomResult?.image">
+                        <img :src="randomResult.image" class="w-full h-full object-cover transition-opacity duration-500" alt="Restaurant Image">
+                    </template>
+                    <template x-if="!randomResult?.image">
+                        <div class="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                            <span class="text-4xl">🍽️</span>
                         </div>
-                    </div>
+                    </template>
+                    <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent"></div>
+                    
+                    <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur text-gray-800 text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded shadow-sm" 
+                         x-text="isRandomPick ? 'IT\'S FATE!' : 'DETAIL'"></div>
+                </div>
 
-                    <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-3 leading-tight line-clamp-2 h-16 flex items-center justify-center" x-text="randomResult?.name"></h2>
-                    <p class="text-sm text-gray-500 mb-6 leading-relaxed line-clamp-3 px-4 h-[4.5em]" x-text="randomResult?.desc"></p>
+                <div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
+                    
+                    <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                        
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
+                            <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
+                            
+                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
+                                <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
+                                <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+                            </div>
+                        </div>
 
-                    <div class="flex flex-wrap justify-center gap-1.5">
-                        <template x-for="dish in randomResult?.dishes.slice(0, 3)">
-                            <span class="text-[10px] px-2 py-1 bg-orange-50 text-orange-700 rounded-lg border border-orange-100" x-text="dish"></span>
-                        </template>
+                        <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight" x-text="randomResult?.name"></h2>
+                        <p class="text-sm text-gray-500 mb-6 leading-relaxed px-2" x-text="randomResult?.desc"></p>
+
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <template x-for="dish in randomResult?.dishes">
+                                <span class="text-xs px-2.5 py-1 bg-orange-50 text-orange-700 rounded-lg border border-orange-100" x-text="dish"></span>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-4 border-t border-gray-100 bg-gray-50 divide-x divide-gray-100">
+            <div class="grid grid-cols-4 border-t border-gray-100 bg-gray-50 divide-x divide-gray-100 shrink-0">
                 <button @click="reportError(randomResult?.id)" 
                     :disabled="isReporting"
                     class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed">
@@ -236,7 +251,7 @@
                         
                         <div class="mt-auto pt-3 border-t border-gray-50 flex justify-between items-start gap-2">
                             <div class="flex flex-wrap gap-1">
-                                <template x-for="dish in r.dishes" :key="dish">
+                                <template x-for="dish in r.dishes">
                                     <span class="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-800 border border-orange-100" x-text="dish"></span>
                                 </template>
                             </div>
@@ -291,7 +306,6 @@
                 isShuffleMode: false,
                 shuffledList: [],
                 
-                // ✨ 改动：新增展开状态
                 expanded: {
                     suburbs: false,
                     categories: false,
@@ -313,6 +327,24 @@
                 categories: [], 
                 restaurants: [], 
 
+                // ✨ 内置分类通用图库 (当 API 没图时使用)
+                defaultImages: {
+                    'Japanese': 'https://images.unsplash.com/photo-1580822184713-fc54006efa4e?w=800&q=80',
+                    'Korean': 'https://images.unsplash.com/photo-1580651315530-69c8e0026377?w=800&q=80',
+                    'Thai': 'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=800&q=80',
+                    'Chinese': 'https://images.unsplash.com/photo-1525164286253-04e68b9d94c6?w=800&q=80',
+                    'Hotpot': 'https://images.unsplash.com/photo-1558221532-6ba947321684?w=800&q=80',
+                    'Noodle': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80',
+                    'Malaysian': 'https://images.unsplash.com/photo-1626804475297-411d8c6b3063?w=800&q=80',
+                    'Brunch': 'https://images.unsplash.com/photo-1520201163981-8cc95007dd2a?w=800&q=80',
+                    'Cafe': 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=800&q=80',
+                    'Burger': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80',
+                    'Pizza': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
+                    'Vietnamese': 'https://images.unsplash.com/photo-1503764654157-72d979d9af2f?w=800&q=80',
+                    'Dessert': 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80',
+                    'Other': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80'
+                },
+
                 async init() {
                     const sheetId = '1Z9FSts7SCjGEFl521UP2Uzpy3tV0PJoQ9jkDmsNNsto';
                     const sheetName = 'Sheet1'; 
@@ -323,9 +355,15 @@
                         
                         this.restaurants = rawData.map((row, index) => {
                             let rawCat = row.category ? row.category.trim() : 'Other';
+                            // 首字母大写处理，确保能匹配 defaultImages
                             if (rawCat.length > 0) {
-                                rawCat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+                                rawCat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1).toLowerCase(); // 修复：确保后续字母小写，匹配更好
                             }
+                            
+                            // 处理一些特殊拼写
+                            let cleanCat = rawCat;
+                            if(rawCat.includes('Japan')) cleanCat = 'Japanese';
+                            if(rawCat.includes('Korea')) cleanCat = 'Korean';
 
                             return {
                                 id: row.id || ('temp_' + index),
@@ -336,7 +374,10 @@
                                 priceLevel: parseInt(row.priceLevel) || 1,
                                 recommendationLevel: parseInt(row.level) || 0,
                                 desc: row.desc || '暂无描述',
-                                dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : []
+                                dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
+                                
+                                // ✨ 图片逻辑：优先用表格里的图，没有则用分类默认图，最后用Other图
+                                image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
                         });
 
@@ -348,11 +389,10 @@
 
                     } catch (error) {
                         console.error("加载错误:", error);
-                        alert("无法加载数据");
+                        alert("无法加载数据，请检查网络或表格设置");
                     }
                 },
 
-                // ✨ 改动：新增切换展开/收起状态函数
                 toggleExpand(section) {
                     this.expanded[section] = !this.expanded[section];
                 },
