@@ -175,15 +175,15 @@
                 <div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
                     <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                         <div class="flex flex-wrap justify-center gap-2 mb-4">
-                            <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
-                            <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
+                            <span class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
                             
-                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
+                            <div class="flex items-center gap-1 bg-orange-50 px-2 py-0.5 rounded">
                                 <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
                                 <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
                             </div>
 
-                            <div x-show="randomResult?.isGoodFood2026" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
+                            <div x-show="randomResult?.isGoodFood2026" class="flex items-center gap-1 bg-gray-900 px-2 py-0.5 rounded shadow-sm border border-gray-700">
                                 <span class="text-xs font-bold text-gold">🏆 2026</span>
                             </div>
                         </div>
