@@ -342,12 +342,31 @@
         <p>Data Source: Google Sheets • Powered by Alpine.js</p>
     </footer>
 
+    <div x-show="showToast" 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-4"
+        class="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[60] bg-gray-900/90 text-white px-6 py-3 rounded-full shadow-xl backdrop-blur-sm flex items-center gap-3 pointer-events-none"
+        x-cloak>
+        <span class="text-xl">✅</span>
+        <div class="flex flex-col">
+            <span class="text-sm font-bold" x-text="toastMessage"></span>
+            <span class="text-[10px] text-gray-400">请打开小红书粘贴搜索</span>
+        </div>
+    </div>
+
     <script>
         function diningApp() {
             return {
                 GAS_URL: 'https://script.google.com/macros/s/AKfycbyuafm1c36P2TpXBRInGPQh_4VdRq-zuNfyUmEE6ndqpv-EEf_805yvdUdfp_vHZjnGVw/exec',
 
                 search: '',
+                showToast: false,
+                toastMessage: '',
+                
                 showRandomizer: false, 
                 randomResult: null,
                 isReporting: false,
@@ -461,9 +480,18 @@
                 copyKeyword(name) {
                     if (!name) return;
                     const text = `悉尼 ${name}`;
+                    
+                    const showSuccess = () => {
+                        this.toastMessage = `已复制 "${text}"`;
+                        this.showToast = true;
+                        setTimeout(() => {
+                            this.showToast = false;
+                        }, 2000);
+                    };
+
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).then(() => {
-                            alert(`已复制关键词："${text}"\n请打开小红书粘贴搜索`);
+                            showSuccess();
                         }).catch(err => {
                             console.error('Copy failed', err);
                             prompt("请手动复制搜索词：", text);
