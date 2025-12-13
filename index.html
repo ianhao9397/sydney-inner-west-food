@@ -192,12 +192,11 @@
                     <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
                 </button>
 
-                <a :href="randomResult ? 'https://www.google.com/search?q=site:xiaohongshu.com ' + encodeURIComponent('悉尼 ' + randomResult.name + ' 食评') : '#'" 
-                   target="_blank"
-                   class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
+                <button @click="copyKeyword(randomResult?.name)" 
+                        class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-500">小红书</span>
-                </a>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-500">复制书名</span>
+                </button>
 
                 <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
                    target="_blank"
@@ -275,12 +274,10 @@
                             </div>
                             
                             <div class="flex items-center gap-2 shrink-0">
-                                <a @click.stop 
-                                   :href="'https://www.google.com/search?q=site:xiaohongshu.com ' + encodeURIComponent('悉尼 ' + r.name + ' 食评')" 
-                                   target="_blank"
-                                   class="text-[10px] text-gray-400 hover:text-red-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-red-100 rounded px-1.5 py-1 hover:bg-red-50">
-                                    <span>📕</span> 食评
-                                </a>
+                                <button @click.stop="copyKeyword(r.name)" 
+                                        class="text-[10px] text-gray-400 hover:text-red-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-red-100 rounded px-1.5 py-1 hover:bg-red-50 cursor-pointer">
+                                    <span>📕</span> 搜书
+                                </button>
 
                                 <button @click.stop="reportError(r.id)" 
                                         class="text-[10px] text-gray-400 bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200 px-2 py-1 rounded transition-all whitespace-nowrap">
@@ -355,7 +352,7 @@
                 categories: [], 
                 restaurants: [], 
 
-                // ✨ 内置通用图库 (当 API 没图时使用)
+                // ✨ 内置通用图库
                 defaultImages: {
                     'Japanese': 'https://images.unsplash.com/photo-1580822184713-fc54006efa4e?w=800&q=80',
                     'Korean': 'https://images.unsplash.com/photo-1580651315530-69c8e0026377?w=800&q=80',
@@ -421,6 +418,24 @@
 
                 toggleExpand(section) {
                     this.expanded[section] = !this.expanded[section];
+                },
+
+                // ✨ 新增：只复制关键词，不跳转
+                copyKeyword(name) {
+                    if (!name) return;
+                    const text = `悉尼 ${name}`;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            alert(`已复制关键词："${text}"\n请打开小红书粘贴搜索`);
+                        }).catch(err => {
+                            console.error('Copy failed', err);
+                            // 降级处理
+                            prompt("请手动复制搜索词：", text);
+                        });
+                    } else {
+                         // 浏览器不支持 clipboard API 的降级处理
+                         prompt("请手动复制搜索词：", text);
+                    }
                 },
 
                 shareRestaurant(r) {
