@@ -208,47 +208,41 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 items-end pb-2 pt-3 relative z-20">
+<div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 py-3 items-center text-center">
                 
                 <button @click="reportError(randomResult?.id)" 
                     :disabled="isReporting"
-                    class="flex flex-col items-center justify-end pb-1 hover:bg-red-50 hover:text-red-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed rounded-lg mx-1 h-12">
-                    <span class="text-xl mb-auto mt-1 group-hover:scale-110 transition-transform" x-text="isReporting ? '⏳' : '⚠️'"></span>
+                    class="flex flex-col items-center justify-center py-2 hover:bg-red-50 hover:text-red-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed mx-1 rounded-lg">
+                    <span class="text-xl mb-1 group-hover:scale-110 transition-transform" x-text="isReporting ? '⏳' : '⚠️'"></span>
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-red-600" x-text="reportText">报错</span>
                 </button>
                 
                 <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
                    target="_blank"
-                   class="flex flex-col items-center justify-end pb-1 hover:bg-green-50 hover:text-green-600 transition-colors group rounded-lg mx-1 h-12">
-                    <span class="text-xl mb-auto mt-1 group-hover:-translate-y-1 transition-transform">📍</span>
+                   class="flex flex-col items-center justify-center py-2 hover:bg-green-50 hover:text-green-600 transition-colors group mx-1 rounded-lg">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📍</span>
                     <span class="text-[10px] font-bold text-gray-900 group-hover:text-green-600">导航</span>
                 </a>
 
-                <div class="flex justify-center items-center -mt-12 relative z-10 pointer-events-none"> 
-                    <button @click="pickRandom()" 
-                        class="pointer-events-auto w-16 h-16 rounded-full border-[6px] border-gray-50 
-                               bg-gradient-to-br from-gray-800 via-gray-900 to-black 
-                               text-white shadow-lg shadow-gray-400/50 
-                               hover:shadow-orange-500/40 hover:from-gray-900 hover:to-gray-800
-                               active:scale-95 active:shadow-inner
-                               flex flex-col items-center 
-                               justify-end 
-                               pb-3
-                               transition-all duration-300 transform group">
-                        <span class="text-2xl mb-1 group-hover:-translate-y-0.5 transition-transform duration-300">🎲</span>
-                        <span class="text-[10px] font-medium tracking-widest text-gray-300 group-hover:text-white transition-colors">刷新</span>
-                    </button>
-                </div>
+                <button @click="pickRandom()" 
+                    class="w-full flex flex-col items-center justify-center 
+                           bg-gray-900 text-white shadow-lg hover:shadow-orange-500/30 
+                           hover:bg-orange-600 
+                           active:scale-95
+                           px-2 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:-translate-y-0.5 mx-1">
+                    <span class="text-xl mb-1">🎲</span>
+                    <span class="text-[10px] font-medium tracking-widest">刷新</span>
+                </button>
                 
                 <button @click="copyKeyword(randomResult?.name)" 
-                        class="flex flex-col items-center justify-end pb-1 hover:bg-red-50 hover:text-red-500 transition-colors group rounded-lg mx-1 h-12">
-                    <span class="text-xl mb-auto mt-1 group-hover:-translate-y-1 transition-transform">📕</span>
+                        class="flex flex-col items-center justify-center py-2 hover:bg-red-50 hover:text-red-500 transition-colors group mx-1 rounded-lg">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-red-500">复制</span>
                 </button>
 
                 <button @click="shareRestaurant(randomResult)" 
-                    class="flex flex-col items-center justify-end pb-1 hover:bg-blue-50 hover:text-blue-600 transition-colors group rounded-lg mx-1 h-12">
-                    <span class="text-xl mb-auto mt-1 group-hover:-translate-y-1 transition-transform">📤</span>
+                    class="flex flex-col items-center justify-center py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors group mx-1 rounded-lg">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>
             </div>
