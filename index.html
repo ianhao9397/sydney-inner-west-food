@@ -119,22 +119,22 @@
                             
                             <button @click="resetFilter('stars')" :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             
-                            <button @click="onlyGoodFood = !onlyGoodFood; currentPage = 1" 
+                            <button @click="onlyGoodFood = !onlyGoodFood; if(onlyGoodFood){ onlyTrending=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
                                     class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
                                 <span>🏆 Good Food Guide </span>
                             </button>
 
-                            <button @click="onlyTrending = !onlyTrending; currentPage = 1" 
+                            <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyTrending ? 'bg-red-500 text-white border-red-500 ring-2 ring-red-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
                                     class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
-                                <span>🔥 本月热门</span>
+                                <span>🔥 热门 Trending</span>
                             </button>
 
-                            <button @click="onlyPick = !onlyPick; currentPage = 1" 
+                            <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; } currentPage = 1" 
                                     :class="onlyPick ? 'bg-purple-600 text-white border-purple-600 ring-2 ring-purple-400/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
                                     class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
-                                <span>👨‍🍳 编辑精选</span>
+                                <span>👨‍🍳 Editor's Pick</span>
                             </button>
 
                             <div class="w-px h-4 bg-gray-200 mx-1"></div>
@@ -448,8 +448,8 @@
                 activeStars: [],
                 
                 onlyGoodFood: true,
-                onlyTrending: false, // 新增：本月流行开关
-                onlyPick: false,     // 新增：编辑精选开关
+                onlyTrending: false, 
+                onlyPick: false,     
 
                 currentPage: 1,
                 itemsPerPage: 24,
@@ -506,7 +506,6 @@
                                 
                                 goodFoodValue: row.goodfood ? String(row.goodfood).trim() : '',
                                 
-                                // 新增：映射表格里的 trend 和 pick 列
                                 isTrend: row.trend == 1, 
                                 isPick: row.pick == 1,
 
@@ -674,8 +673,8 @@
                     if (type === 'stars') {
                         this.activeStars = [];
                         this.onlyGoodFood = false;
-                        this.onlyTrending = false; // 重置
-                        this.onlyPick = false;     // 重置
+                        this.onlyTrending = false; 
+                        this.onlyPick = false;     
                     }
                     this.isShuffleMode = false; 
                     this.currentPage = 1; 
@@ -708,7 +707,6 @@
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
                         
-                        // Good Food / Trending / Pick 逻辑
                         const matchesGoodFood = !this.onlyGoodFood || (r.goodFoodValue && r.goodFoodValue.length > 0);
                         const matchesTrend = !this.onlyTrending || r.isTrend;
                         const matchesPick = !this.onlyPick || r.isPick;
