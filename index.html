@@ -490,7 +490,7 @@
                     
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).then(() => {
-                            this.triggerToast(`已复制 "${text}"` \n `请打开小红书粘贴搜索`);
+                            this.triggerToast(`已复制 "${text}"。请打开小红书粘贴搜索`);
                         }).catch(err => {
                             prompt("请手动复制搜索词：", text);
                         });
