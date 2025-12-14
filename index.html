@@ -14,6 +14,7 @@
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
+        
         /* 增加 Safari 兼容性 */
         .glass-effect { 
             background: rgba(255, 255, 255, 0.95); 
@@ -21,6 +22,7 @@
             -webkit-backdrop-filter: blur(10px);
         }
         .btn-transition { transition: all 0.2s ease-in-out; }
+        
         /* 金色渐变文字 */
         .text-gold {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -28,9 +30,16 @@
             background-clip: text;
             color: transparent; 
         }
+
+        /* === 方案一：淡雅波点背景 === */
+        .bg-grid-pattern {
+            background-color: #fdfbf7; /* 极淡的米白暖色底 */
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 24px 24px; /* 波点间距 */
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased" x-data="diningApp()">
+<body class="bg-grid-pattern text-gray-800 antialiased" x-data="diningApp()">
 
     <header class="glass-effect shadow-sm sticky top-0 z-40 border-b border-gray-100 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -53,7 +62,7 @@
                 <div class="flex gap-3 w-full md:w-auto">
                     <div class="relative flex-grow md:flex-grow-0 md:w-64 group">
                         <input x-model="search" @input="isShuffleMode = false; currentPage = 1" type="text" placeholder="🔍 搜店名、区域、介绍..." 
-                            class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all">
+                            class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all shadow-sm">
                     </div>
                     
                     <button @click="shuffleView()" 
@@ -77,9 +86,9 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">📍 区域</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.suburbs ? '▲' : '▼'"></span>
                             </div>
-                            <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm">全部</button>
                             <template x-for="suburb in suburbs" :key="suburb">
-                                <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
+                                <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm" x-text="suburb"></button>
                             </template>
                         </div>
                     </div>
@@ -90,9 +99,9 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">🍴 类别</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.categories ? '▲' : '▼'"></span>
                             </div>
-                            <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm">全部</button>
                             <template x-for="cat in categories" :key="cat">
-                                <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
+                                <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm" x-text="cat"></button>
                             </template>
                         </div>
                     </div>
@@ -103,10 +112,10 @@
                                 <span class="text-xs font-bold text-gray-400 uppercase w-12">💰 价位</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.prices ? '▲' : '▼'"></span>
                             </div>
-                            <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
-                            <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
-                            <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
-                            <button @click="toggleFilter('activePrices', 3)" :class="activePrices.includes(3) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$$ (40+)</button>
+                            <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm">全部</button>
+                            <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">$ (20内)</button>
+                            <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">$$ (20-40)</button>
+                            <button @click="toggleFilter('activePrices', 3)" :class="activePrices.includes(3) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">$$$ (40+)</button>
                         </div>
                     </div>
 
@@ -117,23 +126,23 @@
                                 <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
                             
-                            <button @click="resetFilter('stars')" :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            <button @click="resetFilter('stars')" :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm">全部</button>
                             
                             <button @click="onlyGoodFood = !onlyGoodFood; if(onlyGoodFood){ onlyTrending=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
-                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1 shadow-sm">
                                 <span>🏆 Good Food Guide </span>
                             </button>
 
                             <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyTrending ? 'bg-red-500 text-white border-red-500 ring-2 ring-red-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
-                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1 shadow-sm">
                                 <span>🔥 热门 Trending</span>
                             </button>
 
                             <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; } currentPage = 1" 
                                     :class="onlyPick ? 'bg-purple-600 text-white border-purple-600 ring-2 ring-purple-400/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
-                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1 shadow-sm">
                                 <span>👨‍🍳 Editor's Pick</span>
                             </button>
 
@@ -141,9 +150,9 @@
 
                             <span class="text-xs font-bold text-gray-400 mx-1 select-none">AI推荐：</span>
                             
-                            <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
-                            <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
-                            <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
+                            <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">⭐⭐⭐</button>
+                            <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">⭐⭐</button>
+                            <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border shadow-sm">⭐</button>
                         </div>
                     </div>
                 </div>
@@ -292,7 +301,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <template x-for="r in paginatedRestaurants" :key="r.id">
-                <div @click="openModal(r)" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative cursor-pointer">
+                <div @click="openModal(r)" class="group bg-white rounded-xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full relative cursor-pointer">
                     
                     <div class="absolute top-0 left-0 w-1 h-full z-10 transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
                     
