@@ -143,13 +143,13 @@
                             <button @click="onlyGoodFood = !onlyGoodFood; if(onlyGoodFood){ onlyTrending=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-black text-amber-400 border-black' : 'bg-white text-gray-600 border-gray-200 hover:border-amber-400 hover:text-amber-500'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
-                                <span>🏆 Good Food Guide </span>
+                                <span>🏆 Good Food Guide</span>
                             </button>
 
                             <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyTrending ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-200 hover:border-red-600 hover:text-red-600'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
-                                <span>🔥 热门 Trending</span>
+                                <span>🔥 Trending</span>
                             </button>
 
                             <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; } currentPage = 1" 
