@@ -378,7 +378,7 @@
     
     <button @click.stop="copyKeyword(r.name)" 
             class="text-[10px] text-gray-500 bg-gray-50 hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200 px-2 py-1 rounded transition-all whitespace-nowrap font-bold"
-            title="已复制，请打卡小红书搜索">
+            title="已复制，请打开小红书搜索">
         📕
     </button>
 
@@ -593,7 +593,7 @@
                     const fullText = `${text}\n🔗 导航: ${url}`;
                     
                     navigator.clipboard.writeText(fullText).then(() => {
-                        this.triggerToast('已复制"${text}"餐厅信息');
+                        this.triggerToast('餐厅信息已复制');
                     }).catch(err => {
                         alert('复制失败，请手动截图分享');
                     });
