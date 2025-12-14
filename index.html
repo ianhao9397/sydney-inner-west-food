@@ -202,41 +202,43 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 divide-x divide-gray-100 shrink-0">
+<div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 py-2 items-center">
+                
                 <button @click="reportError(randomResult?.id)" 
                     :disabled="isReporting"
-                    class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="flex flex-col items-center justify-center py-2 hover:bg-red-50 hover:text-red-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed rounded-lg mx-1">
                     <span class="text-xl mb-1 group-hover:scale-110 transition-transform" x-text="isReporting ? '⏳' : '⚠️'"></span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-600" x-text="reportText">报错</span>
+                    <span class="text-[10px] font-bold text-gray-500 group-hover:text-red-600" x-text="reportText">报错</span>
                 </button>
                 
-                <button @click="pickRandom()" class="flex flex-col items-center justify-center py-4 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
-                    <span class="text-xl mb-1 group-hover:rotate-180 transition-transform duration-500">🔄</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
-                </button>
-
                 <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
                    target="_blank"
-                   class="flex flex-col items-center justify-center py-4 hover:bg-green-50 hover:text-green-600 transition-colors group">
+                   class="flex flex-col items-center justify-center py-2 hover:bg-green-50 hover:text-green-600 transition-colors group rounded-lg mx-1">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📍</span>
-                    <span class="text-xs font-bold text-gray-900 group-hover:text-green-600">导航</span>
+                    <span class="text-[10px] font-bold text-gray-900 group-hover:text-green-600">导航</span>
                 </a>
+
+                <div class="flex justify-center items-center -mt-6"> <button @click="pickRandom()" 
+                        class="w-14 h-14 rounded-full bg-gray-900 text-white shadow-xl hover:shadow-orange-500/40 hover:bg-orange-600 border-4 border-gray-50 flex flex-col items-center justify-center transition-all duration-300 transform hover:scale-110 hover:rotate-180">
+                        <span class="text-xl">🎲</span>
+                        <span class="text-[9px] font-bold mt-0.5">再选</span>
+                    </button>
+                </div>
                 
                 <button @click="copyKeyword(randomResult?.name)" 
-                        class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
+                        class="flex flex-col items-center justify-center py-2 hover:bg-red-50 hover:text-red-500 transition-colors group rounded-lg mx-1">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-500">复制</span>
+                    <span class="text-[10px] font-bold text-gray-500 group-hover:text-red-500">复制</span>
                 </button>
 
                 <button @click="shareRestaurant(randomResult)" 
-                    class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
+                    class="flex flex-col items-center justify-center py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors group rounded-lg mx-1">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-blue-600">分享</span>
+                    <span class="text-[10px] font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>
             </div>
-        </div>
-    </div>
 
+            
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
         <div class="flex justify-between items-end mb-6 px-1 border-b border-gray-100 pb-2">
             <span class="text-sm text-gray-500">
