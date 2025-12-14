@@ -10,11 +10,16 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        body { font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
-        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        /* 增加 Safari 兼容性 */
+        .glass-effect { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+        }
         .btn-transition { transition: all 0.2s ease-in-out; }
         /* 金色渐变文字 */
         .text-gold {
@@ -203,8 +208,7 @@
                 </div>
             </div>
 
-                
-<div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 items-end pb-2 pt-3 relative z-20">
+            <div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 items-end pb-2 pt-3 relative z-20">
                 
                 <button @click="reportError(randomResult?.id)" 
                     :disabled="isReporting"
@@ -228,9 +232,7 @@
                                hover:shadow-orange-500/40 hover:from-gray-900 hover:to-gray-800
                                active:scale-95 active:shadow-inner
                                flex flex-col items-center 
-                               /* 修改3：justify-center 改为 justify-end (底部对齐) */
                                justify-end 
-                               /* 修改4：添加 pb-3 (底部内边距)，把文字位置压低 */
                                pb-3
                                transition-all duration-300 transform group">
                         <span class="text-2xl mb-1 group-hover:-translate-y-0.5 transition-transform duration-300">🎲</span>
@@ -249,11 +251,8 @@
                     <span class="text-xl mb-auto mt-1 group-hover:-translate-y-1 transition-transform">📤</span>
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>
-
-
-
-            
-  
+            </div>
+        </div>
     </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
