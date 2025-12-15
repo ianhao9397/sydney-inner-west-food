@@ -493,7 +493,7 @@
                     'Pizza': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
                     'Vietnamese': 'https://images.unsplash.com/photo-1503764654157-72d979d9af2f?w=800&q=80',
                     'Dessert': 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&q=80',
-                    'Other': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80'
+                    '其他': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80'
                 },
 
                 async init() {
@@ -505,7 +505,7 @@
                         const rawData = await response.json();
                         
                         this.restaurants = rawData.map((row, index) => {
-                            let rawCat = row.category ? row.category.trim() : 'Other';
+                            let rawCat = row.category ? row.category.trim() : '其他';
                             if (rawCat.length > 0) {
                                 rawCat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1).toLowerCase(); 
                             }
@@ -517,7 +517,7 @@
                             return {
                                 id: row.id || ('temp_' + index),
                                 name: row.name || '未知餐厅',
-                                suburb: row.suburb ? row.suburb.trim() : 'Other',
+                                suburb: row.suburb ? row.suburb.trim() : '其他',
                                 category: rawCat,        
                                 displayCategory: rawCat, 
                                 priceLevel: parseInt(row.priceLevel) || 1,
@@ -530,7 +530,7 @@
                                 isTrend: row.trend == 1, 
                                 isPick: row.pick == 1,
 
-                                image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
+                                image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['其他'])
                             };
                         });
 
