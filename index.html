@@ -149,13 +149,13 @@
                             <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; } currentPage = 1" 
                                     :class="onlyTrending ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-200 hover:border-red-600 hover:text-red-600'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
-                                <span>🔥 Trending</span>
+                                <span>🔥 正在流行</span>
                             </button>
 
                             <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; } currentPage = 1" 
                                     :class="onlyPick ? 'bg-purple-700 text-white border-purple-700' : 'bg-white text-gray-600 border-gray-200 hover:border-purple-700 hover:text-purple-700'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
-                                <span>👨‍🍳 Editor's Pick</span>
+                                <span>👨‍🍳 编辑精选</span>
                             </button>
 
                             <div class="w-px h-4 bg-gray-300 mx-1"></div>
@@ -332,11 +332,11 @@
                              </div>
                              
                              <div x-show="r.isTrend" class="bg-red-600 text-white border border-white/20 px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
-                                <span class="text-[10px] font-black tracking-wide">🔥 Trending</span>
+                                <span class="text-[10px] font-black tracking-wide">🔥 正在流行</span>
                              </div>
 
                              <div x-show="r.isPick" class="bg-purple-700 text-white border border-white/20 px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
-                                <span class="text-[10px] font-black tracking-wide">👨‍🍳 Pick</span>
+                                <span class="text-[10px] font-black tracking-wide">👨‍🍳 编辑精选</span>
                              </div>
                          </div>
                     </div>
