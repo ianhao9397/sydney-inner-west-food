@@ -16,7 +16,6 @@
         [x-cloak] { display: none !important; }
         
         /* === 风格升级：Bold & Vivid (大胆鲜明) === */
-        
         .glass-effect { 
             background: rgba(255, 255, 255, 0.92); 
             backdrop-filter: blur(16px); 
@@ -25,12 +24,6 @@
         }
         .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        .text-gold {
-            color: #d97706;
-            font-weight: 800;
-            text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
-        }
-
         /* === 背景：高饱和落日渐变 === */
         .bg-vivid {
             background-color: #FF9A9E;
@@ -38,6 +31,7 @@
             min-height: 100vh;
         }
         
+        /* 选中状态的黑色按钮样式 */
         .btn-active-black {
             background-color: #000 !important;
             color: #fff !important;
@@ -86,6 +80,7 @@
 
             <div class="pb-1">
                 <div x-show="showFilters" x-collapse class="space-y-3 pt-2">
+                    
                     <div :class="expanded.suburbs ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
                         <div :class="expanded.suburbs ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('suburbs')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
@@ -132,24 +127,34 @@
                                 <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
                             
-                            <button @click="resetFilter('stars')" :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:border-yellow-500 hover:text-yellow-600'" class="btn-transition px-3 py-1.5 rounded-lg text-xs font-bold border-2 shadow-sm">全部</button>
+                            <button @click="resetFilter('stars')" 
+                                    :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick && !onlyHiddenGem) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:border-yellow-500 hover:text-yellow-600'" 
+                                    class="btn-transition px-3 py-1.5 rounded-lg text-xs font-bold border-2 shadow-sm">
+                                全部
+                            </button>
                             
-                            <button @click="onlyGoodFood = !onlyGoodFood; if(onlyGoodFood){ onlyTrending=false; onlyPick=false; } currentPage = 1" 
+                            <button @click="onlyGoodFood = !onlyGoodFood; if(onlyGoodFood){ onlyTrending=false; onlyPick=false; onlyHiddenGem=false; } currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-black text-amber-400 border-black' : 'bg-white text-gray-600 border-gray-200 hover:border-amber-400 hover:text-amber-500'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
                                 <span>🏆 Good Food Guide</span>
                             </button>
 
-                            <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; } currentPage = 1" 
+                            <button @click="onlyTrending = !onlyTrending; if(onlyTrending){ onlyGoodFood=false; onlyPick=false; onlyHiddenGem=false; } currentPage = 1" 
                                     :class="onlyTrending ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-200 hover:border-red-600 hover:text-red-600'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
                                 <span>🔥 正在流行</span>
                             </button>
 
-                            <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; } currentPage = 1" 
+                            <button @click="onlyPick = !onlyPick; if(onlyPick){ onlyGoodFood=false; onlyTrending=false; onlyHiddenGem=false; } currentPage = 1" 
                                     :class="onlyPick ? 'bg-purple-700 text-white border-purple-700' : 'bg-white text-gray-600 border-gray-200 hover:border-purple-700 hover:text-purple-700'" 
                                     class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
                                 <span>👨‍🍳 编辑精选</span>
+                            </button>
+
+                            <button @click="onlyHiddenGem = !onlyHiddenGem; if(onlyHiddenGem){ onlyGoodFood=false; onlyTrending=false; onlyPick=false; } currentPage = 1" 
+                                    :class="onlyHiddenGem ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-500 hover:text-blue-500'" 
+                                    class="btn-transition px-3 py-1.5 rounded-lg text-xs font-black border-2 flex items-center gap-1 shadow-sm">
+                                <span>💎 小众宝藏</span>
                             </button>
 
                             <div class="w-px h-4 bg-gray-300 mx-1"></div>
@@ -166,9 +171,9 @@
                 <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-300 mt-2" @click="showFilters = !showFilters">
                     <span class="text-xs font-black text-gray-500 uppercase tracking-wider flex items-center gap-2">
                         <span>筛选条件</span>
-                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0)) > 0" 
+                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0) + (onlyHiddenGem?1:0)) > 0" 
                               class="bg-black text-white px-2 py-0.5 rounded-full text-[10px] font-bold" x-cloak>
-                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0)"></span>
+                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0) + (onlyHiddenGem?1:0)"></span>
                         </span>
                     </span>
                     <button class="text-xs font-bold text-gray-600 hover:text-black flex items-center gap-1 transition-colors">
@@ -201,19 +206,19 @@
                                      x-transition:enter-start="opacity-0"
                                      x-transition:enter-end="opacity-100"
                                      class="absolute inset-0 w-full h-full bg-black">
-                                    <img :src="img" class="w-full h-full object-cover" alt="Food">
+                                    <img :src="img" class="w-full h-full object-cover" alt="Restaurant Image">
                                 </div>
                             </template>
 
                             <button x-show="randomResult.images.length > 1"
                                     @click.stop="prevImage()" 
-                                    class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors">
+                                    class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors z-20">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
 
                             <button x-show="randomResult.images.length > 1"
                                     @click.stop="nextImage()"
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors">
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/60 transition-colors z-20">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
 
@@ -261,6 +266,10 @@
                             
                             <div x-show="randomResult?.isPick" class="flex items-center gap-1 bg-purple-700 text-white px-2 py-1 rounded shadow-sm shrink-0">
                                 <span class="text-[10px] font-black">👨‍🍳</span>
+                            </div>
+
+                            <div x-show="randomResult?.isHidden" class="flex items-center gap-1 bg-blue-500 text-white px-2 py-1 rounded shadow-sm shrink-0">
+                                <span class="text-[10px] font-black">💎</span>
                             </div>
                         </div>
 
@@ -362,6 +371,10 @@
 
                              <div x-show="r.isPick" class="bg-purple-700 text-white border border-white/20 px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
                                 <span class="text-[10px] font-black tracking-wide">👨‍🍳 编辑精选</span>
+                             </div>
+
+                             <div x-show="r.isHidden" class="bg-blue-500 text-white border border-white/20 px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
+                                <span class="text-[10px] font-black tracking-wide">💎 小众宝藏</span>
                              </div>
                          </div>
                     </div>
@@ -472,8 +485,8 @@
                 isReporting: false,
                 reportText: '报错',
                 isRandomPick: false, 
-                
-                // 🔴 新增：当前图片索引
+
+                // 🔴 新增：记录当前轮播图的索引
                 currentImageIndex: 0,
 
                 isShuffleMode: false,
@@ -495,7 +508,8 @@
                 
                 onlyGoodFood: true,
                 onlyTrending: false, 
-                onlyPick: false,     
+                onlyPick: false,
+                onlyHiddenGem: false, 
 
                 currentPage: 1,
                 itemsPerPage: 24,
@@ -539,22 +553,20 @@
                             if(rawCat.includes('Japan')) cleanCat = 'Japanese';
                             if(rawCat.includes('Korea')) cleanCat = 'Korean';
 
-                            // 🔴 重点修改：处理多张图片
+                            // 🔴 重点修改：处理多图逻辑
                             let imagesArray = [];
                             let rawImage = row.image || '';
-                            
-                            // 默认图
                             const fallbackImage = this.defaultImages[cleanCat] || this.defaultImages['其他'];
 
                             if (rawImage.includes('|||')) {
-                                // 如果包含 ||| 分隔符，说明有多张图
+                                // 如果有分隔符，切分数组
                                 imagesArray = rawImage.split('|||').map(s => s.trim()).filter(s => s.startsWith('http'));
                             } else if (rawImage.startsWith('http')) {
-                                // 只有单张图
+                                // 单张图
                                 imagesArray = [rawImage.trim()];
                             }
 
-                            // 如果没图，用默认图占位
+                            // 如果没图，用默认图
                             if (imagesArray.length === 0) {
                                 imagesArray = [fallbackImage];
                             }
@@ -574,11 +586,12 @@
                                 
                                 isTrend: row.trend == 1, 
                                 isPick: row.pick == 1,
+                                isHidden: row.hidden == 1, 
 
-                                // image 属性保留给列表页显示封面（取第一张）
+                                // image: 给列表页用的封面（取第一张）
                                 image: imagesArray[0],
-                                // images 属性给详情页轮播（包含所有）
-                                images: imagesArray 
+                                // images: 给弹窗用的图集
+                                images: imagesArray
                             };
                         });
 
@@ -649,6 +662,7 @@
                     if(r.goodFoodValue) text += `\n🏆 Good Food Guide ${r.goodFoodValue}`;
                     if(r.isTrend) text += `\n🔥 Trending This Month`;
                     if(r.isPick) text += `\n👨‍🍳 Editor's Pick`;
+                    if(r.isHidden) text += `\n💎 Hidden Gem`; 
                     text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
                     
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
@@ -677,7 +691,7 @@
                 openModal(restaurant) {
                     this.randomResult = restaurant;
                     this.isRandomPick = false; 
-                    this.currentImageIndex = 0; // 重置轮播图索引
+                    this.currentImageIndex = 0; // 重置索引
                     this.showRandomizer = true;
                     this.isReporting = false;
                     this.reportText = '报错';
@@ -693,7 +707,7 @@
                     }
                     const randomIndex = Math.floor(Math.random() * pool.length);
                     this.randomResult = pool[randomIndex];
-                    this.currentImageIndex = 0; // 重置轮播图索引
+                    this.currentImageIndex = 0; // 重置索引
                     this.isRandomPick = true; 
                     this.showRandomizer = true;
                 },
@@ -760,6 +774,7 @@
                         this.onlyGoodFood = false;
                         this.onlyTrending = false; 
                         this.onlyPick = false;     
+                        this.onlyHiddenGem = false;
                     }
                     this.isShuffleMode = false; 
                     this.currentPage = 1; 
@@ -795,6 +810,7 @@
                         const matchesGoodFood = !this.onlyGoodFood || (r.goodFoodValue && r.goodFoodValue.length > 0);
                         const matchesTrend = !this.onlyTrending || r.isTrend;
                         const matchesPick = !this.onlyPick || r.isPick;
+                        const matchesHidden = !this.onlyHiddenGem || r.isHidden;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
@@ -803,7 +819,7 @@
                                               r.desc.toLowerCase().includes(query) ||
                                               r.dishes.some(d => d.toLowerCase().includes(query));
                         
-                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesGoodFood && matchesTrend && matchesPick && matchesSearch;
+                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesGoodFood && matchesTrend && matchesPick && matchesHidden && matchesSearch;
                     });
                 },
 
