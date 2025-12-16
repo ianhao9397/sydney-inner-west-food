@@ -558,10 +558,25 @@
                             let rawImage = row.image || '';
                             const fallbackImage = this.defaultImages[cleanCat] || this.defaultImages['其他'];
 
-                            if (rawImage.includes('|||')) {
-                                // 如果有分隔符，切分数组
-                                imagesArray = rawImage.split('|||').map(s => s.trim()).filter(s => s.startsWith('http'));
-                            } else if (rawImage.startsWith('http')) {
+// 定义黑名单：屏蔽 Facebook, Instagram 和一些不稳定的 CDN
+const blockedDomains = ['lookaside.fbsbx.com', 'lookaside.instagram.com', 'instagram.com', 'facebook.com'];
+
+if (rawImage.includes('|||')) {
+    imagesArray = rawImage.split('|||')
+        .map(s => s.trim())
+        .filter(s => {
+            // 1. 必须是 http 开头
+            if (!s.startsWith('http')) return false;
+            // 2. 检查是否在黑名单里
+            return !blockedDomains.some(domain => s.includes(domain));
+        });
+} else if (rawImage.startsWith('http')) {
+    // 检查单张图是否在黑名单
+    const isBlocked = blockedDomains.some(domain => rawImage.includes(domain));
+    if (!isBlocked) {
+        imagesArray = [rawImage.trim()];
+    }
+} {
                                 // 单张图
                                 imagesArray = [rawImage.trim()];
                             }
