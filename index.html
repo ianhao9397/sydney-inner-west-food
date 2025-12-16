@@ -733,8 +733,54 @@
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
                 async reportError(id) {
-                    // 暂时禁用报错功能，因为还没有建立 Reports 表
-                    alert("⚠️ 正在数据库迁移中，报错功能暂停使用。");
+                    // 防止重复点击
+                    if (!id || this.isReporting) return;
+                    
+                    // 简单的确认弹窗
+                    if (!confirm("确定要为这家餐厅报错吗？\n(我们将收到通知并尽快核实)")) return;
+
+                    this.isReporting = true;
+                    this.reportText = '提交中...';
+
+                    // 1. 找到是哪家餐厅（为了方便你在后台看，我们直接存名字）
+                    const restaurant = this.restaurants.find(r => r.id === id);
+                    const name = restaurant ? restaurant.name : '未知ID: ' + id;
+
+                    try {
+                        // 2. 发送给 Supabase
+                        const { error } = await supabaseClient
+                            .from('reports') // 这里的表名必须和你刚才建的一样
+                            .insert([
+                                { 
+                                    restaurant_name: name, 
+                                    message: '用户点击了报错按钮' 
+                                }
+                            ]);
+
+                        if (error) throw error;
+
+                        // 3. 成功反馈
+                        this.triggerToast('✅ 反馈已提交，谢谢你的帮助！');
+                        this.reportText = '已反馈';
+
+                        // 如果是在“随机看”模式下，1秒后自动切到下一家（可选体验优化）
+                        setTimeout(() => {
+                            if(this.showRandomizer && this.isRandomPick) {
+                                // this.pickRandom(); // 如果你想自动切，把这行注释解开
+                            }
+                        }, 1000);
+
+                    } catch (error) {
+                        console.error("报错提交失败:", error);
+                        alert("提交失败，请检查网络或稍后再试。");
+                        this.reportText = '重试';
+                    } finally {
+                        // 2秒后恢复按钮状态
+                        setTimeout(() => {
+                            this.isReporting = false;
+                            if (this.reportText === '已反馈') this.reportText = '报错';
+                        }, 2000);
+                    }
                 },
                 toggleFilter(targetArray, value) {
                     if (this[targetArray].includes(value)) {
